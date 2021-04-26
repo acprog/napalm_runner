@@ -1,0 +1,12 @@
+common:
+	статические классы переведены на ::current
+	добавлены многочисленные const
+	добавлен theme_collection
+	добавлены классы array_x, array_xy
+	добавлен класс pointer_list
+	
+win32:
+
+runner:
+	добавлены ссылки на звуки
+	переведен land, theme, application, platform, game, maze на static_cass
