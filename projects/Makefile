@@ -2,14 +2,14 @@
 # он же вызывет остальные
 
 ROOT_DIR:=$(patsubst /cygdrive/c%,c:%, $(shell cd ..; pwd))
-COMMON_DIR:=$(ROOT_DIR)/common
+ENGINE_DIR:=$(ROOT_DIR)/engine
 PROJECTS:=$(patsubst %/, %, $(wildcard */))
 PLATFORM:=all
 BUILD_TYPE:=rebuild
 DISTRIBUTIV:=zip zip.zip -q -9
 
 export ROOT_DIR
-export COMMON_DIR
+export ENGINE_DIR
 export DISTRIBUTIV
 export DISTRIBUTIV
 
