@@ -1,3 +1,7 @@
+/* naPalm Runner
+  Copyright (C) 2006
+  Author: Alexander Semenov <acmain@gmail.com>
+*/
 #ifndef _PNO_MAIN_H_
 #define _PNO_MAIN_H_
 
@@ -7,7 +11,7 @@
 #include <cstddef>
 //#include "StarterRsc.h"
 
-#include "..\\..\\..\\common\\sources\\all.h"
+#include "..\\..\\..\\engine\\sources\\all.h"
 using namespace mpp;
 
 extern	int InfoMessage;

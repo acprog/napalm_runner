@@ -1,3 +1,7 @@
+/* naPalm Runner
+  Copyright (C) 2006
+  Author: Alexander Semenov <acmain@gmail.com>
+*/
 #include "pnomain.h"
 #include "palmos5.h"
 
