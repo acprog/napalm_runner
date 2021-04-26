@@ -32,7 +32,7 @@ compile: $(BINS)
 	"$(TOOLS_DIR)/rc" $(RES_INC) $(INCLUDES) /fo"$@" $<
 
 # сборка всех полученных модулей
-link: $(wildcard *.o) $(wildcard common/*.o) $(wildcard common/zip/*.o) $(wildcard common/ogg/*.o) $(wildcard $(PROJECT_NAME)/*.o) win32.res
+link: $(wildcard *.o) $(wildcard engine/*.o) $(wildcard engine/zip/*.o) $(wildcard engine/ogg/*.o) $(wildcard $(PROJECT_NAME)/*.o) win32.res
 	@"$(TOOLS_DIR)/link" $(LDFLAGS) $^ /OUT:"$(PROJECT_DIR)/win32.exe"
 	
 clean:
