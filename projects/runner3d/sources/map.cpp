@@ -1,3 +1,9 @@
+/* naPalm Runner
+
+  Copyright (C) 2006
+
+  Author: Alexander Semenov <acmain@gmail.com>
+*/
 #include "map.h"
 
 int		map::level_size=0,
