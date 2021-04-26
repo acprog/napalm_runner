@@ -1,9 +1,3 @@
-/* naPalm Runner
-
-  Copyright (C) 2006
-
-  Author: Alexander Semenov <acmain@gmail.com>
-*/
 /******************************************************************************
  *
  * File: Starter.cpp

@@ -1,0 +1,57 @@
+GENERATEHEADER "StarterRsc.h"
+
+ICONFAMILYEX
+BEGIN
+    BITMAP "icon-lg-1.bmp" BPP 1 
+    BITMAP "icon-lg-2.bmp" BPP 2 
+    BITMAP "icon-lg-8.bmp" BPP 8 TRANSPARENTINDEX 1 COMPRESS TRANSPARENT 255 255 255
+    BITMAP "icon-lg-1-d144.bmp" BPP 1 DENSITY 2
+    BITMAP "icon-lg-2-d144.bmp" BPP 2 DENSITY 2
+    BITMAP "icon-lg-8-d144.bmp" BPP 8 TRANSPARENTINDEX 1 COMPRESS DENSITY 2 TRANSPARENT 255 255 255
+END
+
+SMALLICONFAMILYEX
+BEGIN
+    BITMAP "icon-sm-1.bmp"  BPP 1
+    BITMAP "icon-sm-2.bmp"  BPP 2
+    BITMAP "icon-sm-8.bmp"  BPP 8 TRANSPARENTINDEX 1 COMPRESS TRANSPARENT 255 255 255
+    BITMAP "icon-sm-1-d144.bmp" BPP 1 DENSITY 2
+    BITMAP "icon-sm-2-d144.bmp" BPP 2 DENSITY 2
+    BITMAP "icon-sm-8-d144.bmp" BPP 8 TRANSPARENTINDEX 1 COMPRESS DENSITY 2 TRANSPARENT 255 255 255
+END
+
+
+ALERT ID RomIncompatibleAlert 
+ERROR
+BEGIN
+	TITLE "System Incompatible"
+	MESSAGE "System Version 5.0 or greater is required to run this application."
+	BUTTONS "OK"  
+END
+
+
+ALERT ID ErrorMessage
+ERROR
+BEGIN
+	TITLE "Error"
+	MESSAGE "^1"
+	BUTTONS "OK"  
+END
+
+ALERT ID InfoMessage
+ERROR
+BEGIN
+	TITLE "Info Message"
+	MESSAGE "^1"
+	BUTTONS "OK"  
+END
+
+
+ALERT ID ConfirmAlert 
+CONFIRMATION DEFAULTBUTTON 1
+BEGIN
+	 TITLE "Confirmation"
+     MESSAGE "^1"
+     BUTTONS "Yes" "No"
+END
+
