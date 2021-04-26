@@ -1,11 +1,11 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 // Win32.cpp : Defines the entry point for the application.
 //
+
+#include <iostream.h>
 
 #include "Win32.h"
 #include "../resources/resource.h"
@@ -23,6 +23,7 @@ const string &mpp::log_message(const char *module, int line, const string &str)
 	_strtime( tbuffer );
 
 	f << tbuffer << "\t\t\t\tfile: " << module << "\tline: " << line << "\n\t" << (const char*)str << "\n";
+	clog << tbuffer;
 	return str;
 }
 

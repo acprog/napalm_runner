@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #pragma once
@@ -29,9 +27,9 @@
 using std::ifstream;
 using std::ofstream;
 using std::fstream;
-using std::ios;
+//using std::ios;
 
-#include "..\\..\\..\\common\\sources\\all.h"
+#include "..\\..\\..\\engine\\sources\\all.h"
 using namespace mpp;
 
 #define		IDI_AC          129
