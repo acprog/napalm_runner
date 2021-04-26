@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #ifndef _WINCE_H_
@@ -23,7 +21,7 @@
 #include <time.h>
 
 
-#include "../../../common/sources/all.h"
+#include "../../../engine/sources/all.h"
 using namespace mpp;
 
 #define		IDI_AC          129
