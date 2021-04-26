@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #include "prefs.h"
@@ -9,7 +7,7 @@
 #include "objects.h"
 #include "game.h"
 #include "resources.h"
-
+#include "events.h"
 
 
 //===============================================================
@@ -127,7 +125,7 @@ void	cage::normalize(cage &next, bool in_editor)
 //	лабиринт
 //===============================================================
 base_maze::base_maze(map *_map)
-	:on_screen		(_map->size()*CAGE_SIZE)
+	:on_screen		(_map->count()*CAGE_SIZE)
 	,cages			(*_map)
 	,n_bursts		(0)
 {
@@ -301,10 +299,10 @@ void base_maze::draw(image *screen, bool near_plane)
 		p.y=CAGE_SIZE-(-on_screen.y%CAGE_SIZE);
 	}
 	point<>	end(start.x+screen->width/CAGE_SIZE-1, start.y+screen->height/CAGE_SIZE-1);
-	if (end.x>=cages.size().width)
-		end.x=cages.size().width;
-	if (end.y>=cages.size().height)
-		end.y=cages.size().height;
+	if (end.x>=cages.count().width)
+		end.x=cages.count().width;
+	if (end.y>=cages.count().height)
+		end.y=cages.count().height;
 
 	// отрисовка целых
 	cage	c;
@@ -329,7 +327,7 @@ void base_maze::draw(image *screen, bool near_plane)
 
 	// отрисовка кусков
 	// нижний край
-	if (end.y<cages.size().height)
+	if (end.y<cages.count().height)
 	{
 		cur.x=start.x;
 		p.x=def.x;
@@ -375,7 +373,7 @@ void base_maze::draw(image *screen, bool near_plane)
 	}
 
 	// правый край
-	if (end.x<cages.size().width)
+	if (end.x<cages.count().width)
 	{
 		cur=point<>(end.x, start.y);
 		p=def+point<>((end.x-start.x)*CAGE_SIZE, 0);
@@ -384,7 +382,7 @@ void base_maze::draw(image *screen, bool near_plane)
 			cur.y--;
 			p.y-=CAGE_SIZE;
 		}
-		if (end.y<cages.size().height)
+		if (end.y<cages.count().height)
 			end.y++;
 		for (;cur.y<end.y; cur.y++, p.y+=CAGE_SIZE)
 			draw_segment(*screen, cur, p, near_plane);
@@ -417,12 +415,12 @@ void base_maze::draw_segment(image &screen, const point<> &cur, point<> p, bool 
 void	base_maze::normalize_maze(bool in_editor)
 {
 	cage	*curr=&cages[point<>(0, 0)];
-	cage	*next=curr+cages.size().width;
+	cage	*next=curr+cages.count().width;
 
 	int	i;
-	for (i=cages.size().width*(cages.size().height-1); --i>=0; curr++, next++)
+	for (i=cages.count().width*(cages.count().height-1); --i>=0; curr++, next++)
 		curr->normalize(*next, in_editor);
-	for (i=cages.size().width; --i>=0; curr++, next++)
+	for (i=cages.count().width; --i>=0; curr++, next++)
 		if (*curr==no_item)
 			curr->join().bottom=true;
 }
@@ -449,26 +447,19 @@ maze::maze(map *_map)
 	:base_maze	(_map)
 	,n_cash		(0)
 {
-//	LOG("make object..");
 	make_objects();
-//	LOG("normalize..");
 	normalize_maze();
-//	LOG("calc cash..");
 	calc_cash();
 
-//	LOG("broken to mirajes..");
 	// сломанные в миражи
-	point<>	i;
-	for (i.y=0; i.y<cages.size().height; i.y++)
-		for (i.x=0; i.x<cages.size().width; i.x++)
-			cages[i].broken_to_mirage();
-//	LOG("maze constructed!");
+	while (cage *c=cages.each_ptr())
+		c->broken_to_mirage();
 }
 
 
 
 //===============================================================
-void maze::event(object_move *p)
+void maze::event(object_move *p, void*)
 {
 	//------------------------------------------------------
 	// смотрим текущую клетку
@@ -491,7 +482,7 @@ void maze::event(object_move *p)
 	}
 
 	// нижняя граница экрана
-	if (p->obj->pos_on_map().y>=cages.size().height-1)
+	if (p->obj->pos_on_map().y>=cages.count().height-1)
 	{
 		p->type=move_normal;
 		return;
@@ -523,9 +514,9 @@ void maze::event(object_move *p)
 
 
 //===============================================================
-void maze::event(check_move *m)
+void maze::event(check_move *m, void*)
 {
-	if (m->to.x<0 || m->to.y<0 || m->to.x>=cages.size().width || m->to.y>=cages.size().height)
+	if (m->to.x<0 || m->to.y<0 || m->to.x>=cages.count().width || m->to.y>=cages.count().height)
 	{
 		m->pass=false;
 		return;
@@ -541,7 +532,7 @@ void maze::event(check_move *m)
 
 
 //===============================================================
-void maze::event(check_creature_move *m)
+void maze::event(check_creature_move *m, void*)
 {
 	cage	from	=cages[m->from],
 			to		=cages[m->to];
@@ -557,7 +548,7 @@ void maze::event(check_creature_move *m)
 //===============================================================
 bool	maze::break_cage(const point<> &pos)
 {
-	if (pos.x<0 || pos.x>=cages.size().width || pos.y<0 || pos.y>=cages.size().height)
+	if (pos.x<0 || pos.x>=cages.count().width || pos.y<0 || pos.y>=cages.count().height)
 		return false;
 	
 	cage	&c=cages[pos];
@@ -600,7 +591,7 @@ void maze::copy_cage(image &dst, const point<> &pos)
 
 
 //==========================================================================
-void maze::event(creature_move *c)
+void maze::event(creature_move *c, void*)
 {
 	if (cages[c->pos_on_map()]!=no_item)
 	{
@@ -618,7 +609,7 @@ void maze::event(creature_move *c)
 
 
 //==========================================================================
-void maze::event(burst *b)
+void maze::event(burst *b, void*)
 {
 	n_bursts--;
 	point<>	i,
@@ -627,7 +618,7 @@ void maze::event(burst *b)
 
 	for (i.y=from.y; i.y<=to.y; i.y++)
 		for (i.x=from.x; i.x<=to.x; i.x++)
-			if (cages.size().inside(i))
+			if (cages.count().inside(i))
 				if (b->burst_point(i))
 					if (cages[i].burst())
 					{
@@ -647,7 +638,7 @@ void maze::start_burst()
 
 
 //==========================================================================
-void maze::event(check_pile *p)
+void maze::event(check_pile *p, void*)
 {
 	if (p->pos.y<1)
 		p->possible=false;
@@ -658,7 +649,7 @@ void maze::event(check_pile *p)
 
 
 //==========================================================================
-void maze::event(grab_item *g)
+void maze::event(grab_item *g, void*)
 {
 	cage			&c=cages[g->pos];
 
@@ -691,7 +682,7 @@ bool maze::open_door(const point<> &pos)
 		cages[pos].activate_door();
 		door_active	d;
 		d.pos=door;
-		send(&d, this);
+		send(&d, &game::get(), this);
 	}
 	return true;
 }
@@ -707,7 +698,7 @@ void maze::get_one_cash()
 		{
 			door_active	d;
 			d.pos=door;
-			send(&d, this);
+			send(&d, &game::get(), this);
 		}
 	}
 }
@@ -717,10 +708,9 @@ void maze::get_one_cash()
 //==========================================================================
 void maze::calc_cash()
 {
-	cage	*m=&cages[point<>(0, 0)];
-	for (int i=cages.size().area(); --i>=0; m++)
-		if (*m!=no_item)
-			if ((item_type)*m>=lo_cash && (item_type)*m<=hi_cash)
+	while (cage *c=cages.each_ptr())
+		if (*c!=no_item)
+			if ((item_type)*c>=lo_cash && (item_type)*c<=hi_cash)
 				n_cash++;
 }
 
@@ -729,13 +719,14 @@ void maze::calc_cash()
 player	*maze::create_player(player_info pi)
 {
 	point<>	i;
-	for (i.y=0; i.y<cages.size().height; ++i.y)
-		for (i.x=0; i.x<cages.size().width; ++i.x)
-			if (cages[i]==iplayer)
-			{
-				cages[i].erase();
-				return new player(i, pi);
-			}
+	
+	while (cage *c=cages.each_ptr(&i))
+		if (*c==iplayer)
+		{
+			cages.break_each();
+			c->erase();
+			return new player(i, pi);
+		}
 	return NULL;
 }
 
@@ -744,13 +735,14 @@ player	*maze::create_player(player_info pi)
 monster *maze::create_monster(player *target)
 {
 	point<>	i;
-	for (i.y=0; i.y<cages.size().height; i.y++)
-		for (i.x=0; i.x<cages.size().width; i.x++)
-			if (cages[i]==imonster)
-			{
-				cages[i].erase();
-				return new monster(i, target);
-			}
+	
+	while (cage *c=cages.each_ptr(&i))
+		if (*c==imonster)
+		{
+			cages.break_each();
+			c->erase();
+			return new monster(i, target);
+		}
 	return NULL;
 }
 
@@ -759,28 +751,23 @@ monster *maze::create_monster(player *target)
 //==========================================================================
 void maze::make_objects()
 {
-//	LOG("make_objects()");
 	point<>	i;
-	for (i.y=0; i.y<cages.size().height; i.y++)
-		for (i.x=0; i.x<cages.size().width; i.x++)
+	while (cage *c=cages.each_ptr(&i))
+	{
+		if ((item_type)*c<=ibomb)
 		{
-			if ((item_type)cages[i]<=ibomb)
-			{
-				// это имеет смысл только при траве
-			//	new dropped(i, cages[i]);
-			//	cages[i]=cage::empty;
-			}
-			else if (cages[i]==ibox)
-			{
-//				LOG("create box");
-				cages[i].erase();
-				new box(i);
-//				LOG("box created!");
-			}
-			else if (cages[i]==closed_door)
-				door=i;
+			// это имеет смысл только при траве
+			//	new dropped(i, *c);
+			//	*c=cage::empty;
 		}
-//	LOG("objects maked!");
+		else if (*c==ibox)
+		{
+			c->erase();
+			new box(i);
+		}
+		else if (*c==closed_door)
+			door=i;
+	}
 }
 
 
@@ -800,7 +787,7 @@ bool maze::activate_door()
 //==========================================================================
 bool	maze::possible_punsh(const point<> &p)
 {
-	if (p.x<0 || p.y<1 || p.x>=cages.size().width || p.y>=cages.size().height)
+	if (p.x<0 || p.y<1 || p.x>=cages.count().width || p.y>=cages.count().height)
 		return false;
 	
 	cage	c=cages[p],

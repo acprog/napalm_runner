@@ -1,0 +1,29 @@
+<adventure>
+	<level1
+		name = "levels"/>
+	<level2
+		name = "cavish"/>
+	<level3
+		name = "mechanic man"/>
+	<level4
+		name = "pyramid"/>
+	<level5
+		name = "egipted"/>
+	<level6
+		name = "kantos"/>
+	<level7
+		name = "samael"/>
+	<level8
+		name = "boxes"/>
+	<level9
+		name = "rats"/>
+	<level10
+		name = "mine"/>
+	<level11
+		name = "tower"/>
+	<save
+		lives = "fwaj"
+		cashs = "fmaj"
+		level = "eqaj"
+		bombs = "gl"/>
+</adventure>

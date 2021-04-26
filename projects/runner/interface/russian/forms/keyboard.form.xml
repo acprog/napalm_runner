@@ -1,0 +1,90 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<keyboard
+	use_template_command="template"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+
+	<input	
+		left="+5%"
+		top="+7%"
+		width="90%"
+		height="15%"/>
+
+	<cancel
+		text="Отмена"
+		left="+0%"
+		top="-20%"
+		width="20%"
+		height="15%"/>
+
+	<space
+		text="Пробел"
+		left="+20%"
+		top="-20%"
+		width="50%"
+		height="15%"/>
+
+	<backspace
+		text="Backspace"
+		left="+70%"
+		top="-20%"
+		width="30%"
+		height="15%"/>
+
+	<enter
+		text="Enter"
+		left="+80%"
+		top="+65%"
+		width="20%"
+		height="15%"/>
+
+	<all_keys
+	 	width="10%"
+	 	height="15%"/>
+
+	<dash	template="all_keys"	text="-"	left="+0%"	top="+65%"/>
+
+	<n1	template="all_keys"	text="1"	left="+0%"		top="+20%"/>
+	<n2	template="n1"		text="2"	left="+10%"/>
+	<n3	template="n1"		text="3"	left="+20%"/>
+	<n4	template="n1"		text="4"	left="+30%"/>
+	<n5	template="n1"		text="5"	left="+40%"/>
+	<n6	template="n1"		text="6"	left="+50%"/>
+	<n7	template="n1"		text="7"	left="+60%"/>
+	<n8	template="n1"		text="8"	left="+70%"/>
+	<n9	template="n1"		text="9"	left="+80%"/>
+	<n0	template="n1"		text="0"	left="+90%"/>
+
+	<Q	template="all_keys"	text="Q"	left="+0%"		top="+35%"/>
+	<W	template="Q"		text="W"	left="+10%"/>
+	<E	template="Q"		text="E"	left="+20%"/>
+	<R	template="Q"		text="R"	left="+30%"/>
+	<T	template="Q"		text="T"	left="+40%"/>
+	<Y	template="Q"		text="Y"	left="+50%"/>
+	<U	template="Q"		text="U"	left="+60%"/>
+	<I	template="Q"		text="I"	left="+70%"/>
+	<O	template="Q"		text="O"	left="+80%"/>
+	<P	template="Q"		text="P"	left="+90%"/>
+
+	<A	template="all_keys"	text="A"	left="+5%"		top="+50%"/>
+	<S	template="A"		text="S"	left="+15%"/>
+	<D	template="A"		text="D"	left="+25%"/>
+	<F	template="A"		text="F"	left="+35%"/>
+	<G	template="A"		text="G"	left="+45%"/>
+	<H	template="A"		text="H"	left="+55%"/>
+	<J	template="A"		text="J"	left="+65%"/>
+	<K	template="A"		text="K"	left="+75%"/>
+	<L	template="A"		text="L"	left="+85%"/>
+
+	<Z	template="all_keys"	text="Z"	left="+10%"		top="+65%"/>
+	<X	template="Z"		text="X"	left="+20%"/>
+	<C	template="Z"		text="C"	left="+30%"/>
+	<V	template="Z"		text="V"	left="+40%"/>
+	<B	template="Z"		text="B"	left="+50%"/>
+	<N	template="Z"		text="N"	left="+60%"/>
+	<M	template="Z"		text="M"	left="+70%"/>
+</keyboard>

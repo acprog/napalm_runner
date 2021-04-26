@@ -1,12 +1,10 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #include "game.h"
 #include "runner.h"
-
+#include "events.h"
 
 
 //====================================================================
@@ -26,7 +24,7 @@ game::game(map *map, player_info pi)
 	runner::get().copy_to_buffer(map);
 
 	new maze(map);
-	new minimap(map->size()*2, *map, maze::get().screen_offset());
+	new minimap(map->count()*2, *map, maze::get().screen_offset());
 	new game_bar();
 
 	current_player=maze::get().create_player(pi);
@@ -52,12 +50,15 @@ game::game(map *map, player_info pi)
 //========================================================================
 game::~game()
 {
+	game_bar::erase();
+	game_menu::erase();
+	maze::erase();
 	minimap::erase();
 }
 
 
 //========================================================================
-void game::event(redraw *screen)
+void game::event(redraw *screen, void *source)
 {
 	size<>	ss=platform::get().screen_size();
 	ss.height-=TOOLBAR_HEIGHT;
@@ -71,15 +72,15 @@ void game::event(redraw *screen)
 	p.screen=&game_win;
 	p.window=rect<>(point<>(-1, -1)*CAGE_SIZE-maze::get().screen_offset(), ss+CAGE_SIZE);
 	p.bursts_only=false;
-	send_down<draw_objects>::event(&p);
+	send(&p, this, NULL);
 
 	maze::get().draw(&game_win, true);
 
 	p.window=rect<>(point<>(-1, -1)*BURST_SIZE-maze::get().screen_offset(), ss+BURST_SIZE);
 	p.bursts_only=true;
-	send_down<draw_objects>::event(&p);
+	send(&p, this, NULL);
 
-	send_down<redraw>::event(screen);
+	dispatcher<redraw>::event(screen, source);
 #if 0
 	drawed_frames++;
 	const	font	&fnt=*common_collection::read_only().font;
@@ -155,27 +156,23 @@ void game::pen_up(const point<> &pos)
 }
 
 //========================================================================
-void game::event(timer *t)
+void game::event(timer *t, void *source)
 {
 	if (t==&fps_counter)
 	{
 		fps=drawed_frames;
 		drawed_frames=0;
 	}
-	locked_screen::event(t);
+	locked_screen::event(t, source);
 }
 
 
 
 //========================================================================
-void game::event(cycle *c)
+void game::event(cycle *c, void *source)
 {
-	send_down<cycle>::event(c);
-	while(object *o=for_remove.each())
-	{
-		delete o;
-		for_remove.remove(o);
-	}
+	dispatcher<cycle>::event(c, source);
+	for_remove.clear();
 }
 
 

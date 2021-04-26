@@ -1,0 +1,16 @@
+<land_prefs>
+	<animation_periods
+		door="1"
+		lo_cash="2"
+		med_cash="2"
+		hi_cash="2"
+		water="1"/>
+	<minimap>
+		<colors
+		window="FF64EB"
+		impassable="90AA00"
+		ladder="E2E2E2"
+		water="9364FF"
+		cash="00FFBA"/>
+	</minimap>
+</land_prefs>

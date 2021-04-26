@@ -1,0 +1,74 @@
+<?xml
+	version="1.0"
+	encoding="windows-1250"?>
+<single
+	use_template_command="template"
+	title="Single Game"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+	<adventure
+		text="Maps sets"
+   		left="+90"
+		right="-90"
+		height="35"
+		top="-48"/>
+	<random
+		template="adventure"
+		text="Random"
+		top="-83"/>
+	<back
+		picture="exit"
+		left="+20"
+		top="-77"/>
+	<start
+		picture="game"
+		left="-84"
+		top="-77"/>
+	<maze_size
+		left="-118"
+		top="+32"
+		right="-50"
+		height="32">
+        <plus
+        	picture="plus"
+        	left="-50"
+        	top="+32"/>
+		<minus
+			template="maze_size/plus"
+			picture="minus"
+			left="-150"/>
+		<info
+			text="Size of labirynth"
+			align="right"
+			left="+5%"
+			top="+32"
+			right="-150"
+			height="32"/>
+	</maze_size>
+	<difficult
+		template="maze_size"
+		top="+64">
+        <plus     	top="+64"/>
+		<minus		top="+64"/>
+		<info
+			text="Difficulty"
+			align="right"
+			top="+64"/>
+	</difficult>
+	<lands
+		left="+5%"
+		top="+96"
+		width="90%"
+		bottom="-90">
+		<up
+			picture="up"
+			left="-15%"
+			top="+96"/>
+		<down
+			template="lands/up"
+			picture="down"
+			top="-122"/>
+	</lands>
+</single>

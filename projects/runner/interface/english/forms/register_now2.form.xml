@@ -1,0 +1,72 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<register_now2
+	use_template_command="template"
+	border="small_frame"
+	ground="register"
+	width="45%"
+	height="100%">
+
+	<movement_region
+		right="+100%"
+		height="100%"/>
+
+	<text1
+		text="Help:"
+		align="left"
+		left="+10"
+		top="+50"
+		right="-10"
+		height="20"/>
+
+	<text2
+		template="text1"
+		top="+80"
+		text="* It's comfortable to control"/>
+
+	<text12
+		template="text1"
+		top="+110"
+		text="   player by stylus."/>
+
+	<text3
+		template="text1"
+		top="+140"
+		text="* The game will load faster"/>
+
+	<text4
+		template="text1"
+		top="+170"
+		text="   without music"/>
+
+	<text5
+		template="text1"
+		top="+200"
+		text="* To remove this windows"/>
+
+	<text6
+		template="text1"
+		top="+230"
+		text="   please register"/>
+
+	<text7
+		template="text1"
+		top="+260"
+		text="   (at right bottom)"/>
+
+	<text17
+		template="text1"
+		top="+290"
+		text="   in the main menu"/>
+
+	<text8
+		template="text1"
+		top="+320"
+		text="* The game windows can be"/>
+
+	<text9
+		template="text1"
+		top="+350"
+		text="   moved by stylus"/>
+</register_now2>

@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #include "editor.h"
@@ -28,6 +26,9 @@ editor::editor(map *map, const string &_name)
 //========================================================================
 editor::~editor()
 {
+	edit_bar::erase();
+	objects_bar::erase();
+	terrain_bar::erase();
 	minimap::erase();
 }
 
@@ -53,7 +54,7 @@ void editor::undo_all()
 //========================================================================
 void editor::show_minimap() const
 {
-	new editor_minimap(cages.size()*2, cages, on_screen);
+	new editor_minimap(cages.count()*2, cages, on_screen);
 }
 
 
@@ -66,7 +67,7 @@ void editor::set_brush(const cage c)
 
 
 //========================================================================
-void editor::event(redraw *screen)
+void editor::event(redraw *screen, void *source)
 {
 	size<>	ss=platform::get().screen_size();
 	ss.height-=TOOLBAR_HEIGHT;
@@ -75,19 +76,19 @@ void editor::event(redraw *screen)
 	draw(&game_win, false);
 	draw(&game_win, true);
 	
-	send_down<redraw>::event(screen);
+	dispatcher<redraw>::event(screen, source);
 }
 
 
 //========================================================================
 void editor::pen_down(const point<> &pos)
 {
-	point<> p=cages.size().force_inside((pos-on_screen)/CAGE_SIZE);
+	point<> p=cages.count().force_inside((pos-on_screen)/CAGE_SIZE);
 	cage	*c=&cages[p];
 	*c=brush;
 	
-	c[-cages.size().width+((p.y>0 ? 0 : cages.size().area()))].normalize(*c, true);
-	c->normalize(c[cages.size().width-((p.y<cages.size().height-1 ? 0 : cages.size().area()))], true);
+	c[-cages.count().width+((p.y>0 ? 0 : cages.count().area()))].normalize(*c, true);
+	c->normalize(c[cages.count().width-((p.y<cages.count().height-1 ? 0 : cages.count().area()))], true);
 	if (minimap::exist())
 		minimap::get().refresh();
 }

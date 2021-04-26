@@ -1,13 +1,11 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #include "maze.h"
 #include "game.h"
 #include "runner.h"
-
+#include "events.h"
 
 
 //====================================================================
@@ -47,7 +45,7 @@ creature::creature(const point<> &pos, const animation *ani)
 
 
 //====================================================================
-void creature::event(timer *t)
+void creature::event(timer *t, void*)
 {
 	if (t==&move)
 		play(land::get().move);
@@ -61,12 +59,8 @@ void creature::event(timer *t)
 	{
 		invisible=false;
 		set_state(wait);
-		check_move	cm;
-		cm.to=cm.from=pos_on_map();
-		cm.to.y++;
-		cm.pass=true;
-		cm.box=NULL;
-		send(&cm, this);
+		check_move	cm(pos_on_map(), point<>(0, 1));
+		send(&cm);
 		if (cm.pass)
             need_drop();
 	}
@@ -97,11 +91,8 @@ bool creature::check_dpos(const point<> &dpos)
 	if (!motion_object::check_dpos(dpos))
 		return false;
 
-	check_creature_move	pm;
-	pm.from=pm.to=pos_on_map();
-	pm.to+=dpos;	
-	pm.pass=true;
-	send(&pm, this);
+	check_creature_move	pm(pos_on_map(), dpos);
+	send(&pm);
 	if (!pm.pass)
 	{
 		// откат - перемещение невозможно
@@ -155,7 +146,7 @@ void creature::kill()
 
 
 //====================================================================
-void creature::event(pile *p)
+void creature::event(pile *p, void*)
 {
 	if (p->pos_on_map()==pos_on_map().y_offset(-1))	// надомной
 	{
@@ -167,7 +158,7 @@ void creature::event(pile *p)
 
 
 //====================================================================
-void creature::event(box *p)
+void creature::event(box *p, void*)
 {
 	if (p->pos_on_map()==pos_on_map().y_offset(-1))	// надомной
 	{
@@ -210,7 +201,7 @@ void creature::set_move_state(move_type type)
 
 
 //====================================================================
-void creature::event(burst *b)
+void creature::event(burst *b, void*)
 {
 	if (b->burst_point(pos_on_map()) && !invisible)
 	{
@@ -236,7 +227,7 @@ void creature::crash()
 
 
 //====================================================================
-void creature::event(crash_on_cage *c)
+void creature::event(crash_on_cage *c, void*)
 {
 	if (c->p->pos_on_map()==pos_on_map())
 		crash();
@@ -248,7 +239,7 @@ void creature::event(crash_on_cage *c)
 void creature::move_to(const point<> &new_pos, bool teleport)
 {
 	motion_object::move_to(new_pos, teleport);
-	send(this, this);
+	send(this);
 }
 
 
@@ -292,7 +283,7 @@ void creature::froze(const point<> &pos)
 
 
 //====================================================================
-void creature::event(ice_smoke *f)
+void creature::event(ice_smoke *f, void*)
 {
 	froze(f->pos_on_map());
 }
@@ -300,7 +291,7 @@ void creature::event(ice_smoke *f)
 
 
 //====================================================================
-void creature::event(check_box_move *m)
+void creature::event(check_box_move *m, void*)
 {
 	if (pos_on_map()==m->to)
 		m->pass=false;
@@ -353,7 +344,7 @@ void player::set_info_ptrs() const
 
 
 //====================================================================
-void player::event(key_down *p)
+void player::event(key_down *p, void*)
 {
 	if (state==&wait_for_birth)
 	{
@@ -458,11 +449,8 @@ void player::use_item()
 		return;
 	}
 
-	grab_item	g;
-	g.item=&item;
-	g.pos=pos_on_map();
-	g.grabbed=false;
-	send(&g, this);
+	grab_item	g(&item, pos_on_map());
+	send(&g);
 	
 	if (g.grabbed)
 		play(theme::get().player_grab_item);
@@ -500,7 +488,7 @@ void player::use_item()
 
 
 //====================================================================
-void player::event(door_active *d)
+void player::event(door_active *d, void*)
 {
 	if (d->pos==pos_on_map())
 	{
@@ -513,7 +501,7 @@ void player::event(door_active *d)
 
 
 //====================================================================
-void player::event(key_up *p)
+void player::event(key_up *p, void*)
 {
 	if (p->key_id==runner::key().left || p->key_id==runner::key().right)
 		continue_move=false;
@@ -548,7 +536,7 @@ void player::restart()
 void player::move_to(const point<> &new_pos, bool teleport)
 {
 	creature::move_to(new_pos, teleport);
-	send(this, this);
+	send(this);
 	if (new_pos==door)
 	{
 		center_cage();
@@ -594,7 +582,7 @@ void player::set_move_state(move_type type)
 
 
 //====================================================================
-void player::event(timer *t)
+void player::event(timer *t, void*)
 {
 	if (t==&break_cage)
 	{
@@ -656,10 +644,8 @@ void player::event(timer *t)
 	//---------------------------------------------------------------
 	else if (t==&punsh_up)
 	{
-		check_pile	cp;
-		cp.pos=pos_on_map().x_offset(turn_to_right ? 1 : -1);
-		cp.possible=true;
-		send_up<check_pile>::event(&cp);
+		check_pile	cp(pos_on_map().x_offset(turn_to_right ? 1 : -1));
+		send(&cp);
 		if (cp.possible)
 			new class pile(pos_on_map().x_offset(turn_to_right ? 1 : -1));
 		set_state(punsh_down);
@@ -688,7 +674,7 @@ void player::event(timer *t)
 		item=no_item;
 		kill();
 	}
-	creature::event(t);
+	creature::event(t, this);
 }
 
 
@@ -769,7 +755,7 @@ void player::push_pick(bool _turn_to_right)
 		turn_to_right=_turn_to_right;
 		key_down	kd;
 		kd.key_id=runner::key().item;
-		event(&kd);
+		event(&kd, this);
 	}
 }
 
@@ -902,19 +888,12 @@ bool monster::search_way(point<> &pos, const point<> &to)
 //====================================================================
 bool monster::check_dpos(const point<> &pos, const point<> &dpos)
 {
-	check_move	pm;
-	pm.from=pm.to=pos;
-	pm.to+=dpos;
-	pm.pass=true;
-	pm.box=NULL;
-	send(&pm, this);
+	check_move	pm(pos, dpos);
+	send(&pm);
 	if (pm.pass)
 	{
-		check_creature_move	cm;
-		cm.from=cm.to=pos;
-		cm.to+=dpos;
-		cm.pass=true;
-		send(&cm, this);
+		check_creature_move	cm(pos, dpos);
+		send(&cm);
 		return cm.pass;
 	}
 	return false;
@@ -923,14 +902,14 @@ bool monster::check_dpos(const point<> &pos, const point<> &dpos)
 
 
 //====================================================================
-void monster::event(player_move *p)
+void monster::event(player_move *p, void*)
 {
 	move_to_target();
 }
 
 
 //====================================================================
-void monster::event(draw_on_minimap *p)
+void monster::event(draw_on_minimap *p, void*)
 {
 	p->p->draw_point(*p->screen, pos_on_map(), COLOR(0xff, 0, 0));
 }
@@ -938,7 +917,7 @@ void monster::event(draw_on_minimap *p)
 
 
 //====================================================================
-void monster::event(timer *t)
+void monster::event(timer *t, void*)
 {
 	if (t==&raise)
 	{
@@ -951,7 +930,7 @@ void monster::event(timer *t)
 		move_to_target();
 	}
 	else
-		creature::event(t);
+		creature::event(t, this);
 
 	if (t==&unfroze)
 		move_to_target();
@@ -959,10 +938,10 @@ void monster::event(timer *t)
 
 
 //====================================================================
-void monster::event(pile *p)
+void monster::event(pile *p, void *source)
 {
 	move_to_target();
-	creature::event(p);
+	creature::event(p, source);
 }
 
 
@@ -971,7 +950,7 @@ void monster::move_to(const point<> &new_pos, bool teleport)
 {
 	creature::move_to(new_pos, teleport);
 	move_to_target();
-	send(this, this);
+	send(this);
 }
 
 
@@ -1021,7 +1000,7 @@ bomb::bomb(const point<> &pos)
 
 
 //====================================================================
-void bomb::event(timer *t)
+void bomb::event(timer *t, void*)
 {
 #ifndef _WIN32_WCE
 	if (t==&fire)
@@ -1038,7 +1017,7 @@ void bomb::event(timer *t)
 
 
 //====================================================================
-void bomb::event(burst *b)
+void bomb::event(burst *b, void*)
 {
 	if (b->burst_point(pos_on_map()) && !bursted)
 	{
@@ -1065,11 +1044,11 @@ burst::burst(const point<> &pos)
 
 
 //====================================================================
-void burst::event(timer *t)
+void burst::event(timer *t, void*)
 {
 	if (t==&explosion)
 	{
-		send(this, this);
+		send(this);
 		game::get().remove_object(this);
 	}
 }
@@ -1113,13 +1092,13 @@ broken_cage::broken_cage(const point<> &pos, bool exploded)
 		wait.stop();
 		set_state(make);
 	}
-	send(this, this);
+	send(this);
 }
 
 
 
 //====================================================================
-void broken_cage::event(draw_objects *ptr)
+void broken_cage::event(draw_objects *ptr, void*)
 {
 	if (!state)
 		return;
@@ -1136,7 +1115,7 @@ void broken_cage::event(draw_objects *ptr)
 
 
 //====================================================================
-void broken_cage::event(timer *t)
+void broken_cage::event(timer *t, void*)
 {
 	if (t==&make)
 	{
@@ -1149,7 +1128,7 @@ void broken_cage::event(timer *t)
 		set_state(unmake);
 		crash_on_cage	c;
 		c.p=this;
-		send(&c, this);
+		send(&c);
 	}
 	else if (t==&unmake)
 	{
@@ -1160,7 +1139,7 @@ void broken_cage::event(timer *t)
 
 
 //====================================================================
-void broken_cage::event(burst *b)
+void broken_cage::event(burst *b, void*)
 {
 	if (b->burst_point(pos_on_map()))
 	{
@@ -1174,7 +1153,7 @@ void broken_cage::event(burst *b)
 
 
 //====================================================================
-void broken_cage::event(monster_move *mv)
+void broken_cage::event(monster_move *mv, void*)
 {
 	if (mv->pos_on_map()==pos_on_map())
 		if (state==&unmake)
@@ -1186,7 +1165,7 @@ void broken_cage::event(monster_move *mv)
 
 
 //====================================================================
-void broken_cage::event(creature_move *c)
+void broken_cage::event(creature_move *c, void*)
 {
 	if (c->pos_on_map()==pos_on_map() && state==&unmake)
 		c->crash();
@@ -1211,7 +1190,7 @@ trap::trap(const point<> &pos)
 	
 
 //====================================================================
-void trap::event(creature_move *c)
+void trap::event(creature_move *c, void*)
 {
 	if (c->pos_on_map()==pos_on_map())
 	{
@@ -1222,7 +1201,7 @@ void trap::event(creature_move *c)
 
 
 //====================================================================
-void trap::event(burst *b)
+void trap::event(burst *b, void*)
 {
 	if (b->burst_point(pos_on_map()))
 		delete this;
@@ -1245,7 +1224,7 @@ dropped::dropped(const point<> &pos, item_type _item)
 
 
 //====================================================================
-void dropped::event(creature_move *c)
+void dropped::event(creature_move *c, void*)
 {
 	if (c->pos_on_map()==pos_on_map())
 	{
@@ -1257,14 +1236,14 @@ void dropped::event(creature_move *c)
 
 
 //====================================================================
-void dropped::event(draw_objects *p)
+void dropped::event(draw_objects *p, void*)
 {
 	p->screen->put_safe(*maze::get().item_image(item), pos_on_screen()+maze::get().screen_offset(), true);
 }
 
 
 //====================================================================
-void dropped::event(grab_item *g)
+void dropped::event(grab_item *g, void*)
 {
 	if (g->pos==pos_on_map() && !g->grabbed)
 	{
@@ -1277,7 +1256,7 @@ void dropped::event(grab_item *g)
 
 
 //====================================================================
-void dropped::event(burst *b)
+void dropped::event(burst *b, void*)
 {
 	if (item>=itrap && item<=ibomb)
 		if (b->burst_point(pos_on_map()))
@@ -1302,12 +1281,12 @@ ice_smoke::ice_smoke(const point<> &pos, bool mirror)
 	turn_to_right=mirror;
 	set_state(wait);
 	pos_on_screen().x-=CAGE_SIZE;
-	send(this, this);
+	send(this);
 }
 
 	
 //====================================================================
-void ice_smoke::event(timer *t)
+void ice_smoke::event(timer *t, void*)
 {
 	delete this;
 }
@@ -1315,7 +1294,7 @@ void ice_smoke::event(timer *t)
 
 
 //====================================================================
-void ice_smoke::event(creature_move *c)
+void ice_smoke::event(creature_move *c, void*)
 {
 	c->froze(pos_on_map());
 }
@@ -1334,12 +1313,12 @@ pile::pile(const point<> &pos)
 {
 	set_state(make);
 	need_drop();
-	send(this, this);
+	send(this);
 }
 
 	
 //====================================================================
-void pile::event(timer *t)
+void pile::event(timer *t, void*)
 {
 	if (t==&make)
 		set_state(wait);
@@ -1351,18 +1330,18 @@ void pile::event(timer *t)
 
 
 //====================================================================
-void pile::event(draw_objects *p)
+void pile::event(draw_objects *p, void *source)
 {
 	if (state==&make)
 		pos_on_screen().y-=CAGE_SIZE/2;
-	object::event(p);
+	object::event(p, source);
 	if (state==&make)
 		pos_on_screen().y+=CAGE_SIZE/2;
 }
 
 
 //====================================================================
-void pile::event(burst *b)
+void pile::event(burst *b, void*)
 {
 	if (b->burst_point(pos_on_map()))
 		remove();
@@ -1372,18 +1351,16 @@ void pile::event(burst *b)
 //====================================================================
 void pile::remove()
 {
-	object_move	om;
-	om.obj=this;
-	om.prev_pos=pos_on_map();
+	object_move	om(this);
 	pos_on_map().y--;	// куданить надо переместить, чтоб вышестоящие объекты упали
-	send(&om, this);
-	send(this, this);	// чтоб монстры знали что завал убран и могли двигаться
+	send(&om);
+	send(this);	// чтоб монстры знали что завал убран и могли двигаться
 	delete this;
 }
 
 
 //====================================================================
-void pile::event(check_move *m)
+void pile::event(check_move *m, void*)
 {
 	if (m->to==pos_on_map())
 		m->pass=false;
@@ -1403,7 +1380,7 @@ void pile::set_move_state(move_type type)
 //====================================================================
 void pile::clash(bool after_drop, box *box)
 {
-	send(this, this);
+	send(this);
 	mstate->unpause();
 }
 
@@ -1418,8 +1395,6 @@ box::box(const point<> &pos)
 	,wait		(this, no_sound,	&land::get().box)
 	,friction	(this, this, 0.22)
 	,handler<burst>	(&game::get())
-	,send_up<box>	(&game::get())
-	,send_up<check_box_move>	(&game::get())
 {
 //	LOG("box constructor");
 	set_state(wait);
@@ -1430,7 +1405,7 @@ box::box(const point<> &pos)
 
 
 //====================================================================
-void box::event(burst *b)
+void box::event(burst *b, void*)
 {
 	if (b->burst_point(pos_on_map()))
 	{
@@ -1438,11 +1413,9 @@ void box::event(burst *b)
 		for (int n=BURST_PIECES; --n>=0;)
 			new piece(pos_on_map(), b->pos_on_map(), land::get().sliver_punch, land::get().slivers);
 
-		object_move	om;
-		om.obj=this;
-		om.prev_pos=pos_on_map();
+		object_move	om(this);
 		pos_on_map().y--;	// куданить надо переместить, чтоб вышестоящие объекты упали
-		send(&om, this);
+		send(&om);
 		delete this;
 	}
 }
@@ -1450,7 +1423,7 @@ void box::event(burst *b)
 
 
 //====================================================================
-void box::event(check_move *m)
+void box::event(check_move *m, void*)
 {
 	if (m->to==pos_on_map())
 	{
@@ -1467,7 +1440,7 @@ void box::clash(bool after_drop, box *box)
 	if (after_drop)
 	{
 		play(land::get().box_punch);
-		send(this, this);
+		send(this);
 	}
 }
 
@@ -1487,11 +1460,8 @@ void box::set_move_state(move_type type)
 //====================================================================
 void box::punch(bool to_right)
 {
-	check_box_move	cm;
-	cm.from=cm.to=pos_on_map();
-	cm.to.x+=to_right ? 1 : -1;
-	cm.pass=true;
-	send(&cm, this);
+	check_box_move	cm(pos_on_map(), point<>(to_right ? 1 : -1, 0));
+	send(&cm);
 	if (!cm.pass || !check_dpos(point<>(to_right ? 1 : -1, 0)))
 		theme::get().player_cannot_punch_box->play();
 	else
@@ -1506,7 +1476,7 @@ void box::punch(bool to_right)
 
 
 //====================================================================
-void box::event(timer *t)
+void box::event(timer *t, void*)
 {
 	if (t==&friction)
 	{
@@ -1576,14 +1546,14 @@ void piece::need_drop()
 }
 
 //====================================================================
-void piece::event(check_move *m)
+void piece::event(check_move *m, void*)
 {
 	// ничего не делаем - я мелкий камень - не преграда
 }
 
 
 //====================================================================
-void piece::event(object_move *p)
+void piece::event(object_move *p, void*)
 {
 	if (p->prev_pos==pos_on_map().y_offset(1))
 		need_drop();	// если объект переместился из клетки подомной
@@ -1599,7 +1569,7 @@ void piece::set_move_state(move_type type)
 
 
 //====================================================================
-void piece::event(timer *t)
+void piece::event(timer *t, void*)
 {
 	if (t==&death)
 		game::get().remove_object(this);
@@ -1607,7 +1577,7 @@ void piece::event(timer *t)
 
 
 //====================================================================
-void piece::event(draw_objects *p)
+void piece::event(draw_objects *p, void*)
 {
 	p->screen->put_safe(ani->get_frame(frame, n_anims), pos_on_screen()+maze::get().screen_offset(), true);
 }
@@ -1618,11 +1588,8 @@ void piece::event(draw_objects *p)
 //====================================================================
 bool piece::check_dpos(const point<> &dpos)
 {
-	check_move	pm;
-	pm.from=pm.to=pos_on_map();
-	pm.to+=dpos;	
-	pm.pass=true;
-	maze::get().event(&pm);
+	check_move	pm(pos_on_map(), dpos);
+	maze::get().event(&pm, this);
 	if (!pm.pass)
 	{
 		play(punch);

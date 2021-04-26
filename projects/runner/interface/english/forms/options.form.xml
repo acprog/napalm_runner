@@ -1,0 +1,75 @@
+<?xml
+	version="1.0"
+	encoding="windows-1250"?>
+<options
+	use_template_command="template"
+	title="Options"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+
+	<back
+		picture="exit"
+		left="+10%"
+		top="-70"/>
+	<keys
+		text="Controls"
+		left="+40%"
+		top="-15%"
+		width="55%"
+		height="10%"/>
+
+	<interfaces
+		left="-140"
+		top="+17%"
+		right="-40"
+		height="32">
+		<info
+			text="Interface"
+			align="right"
+			left="+5%"
+			top="+15%"
+			right="-180"
+			height="32"/>
+		<up
+			picture="left"
+			left="-172"
+			top="+15%"/>
+		<down
+			template="interfaces/up"
+			picture="right"
+			left="-40"/>
+	</interfaces>
+
+	<thems			top="+27%"	template="interfaces">
+		<info		top="+25%"	text="Theme"/>
+		<up			top="+25%"/>
+		<down		top="+25%"/>
+	</thems>
+
+	<rotate_screen	top="+37%"	template="interfaces">
+		<info		top="+35%"	text="Screen rotate"/>
+		<up			top="+35%"/>
+		<down		top="+35%"/>
+	</rotate_screen>
+
+	<sound_quality	top="+52%"	template="rotate_screen">
+		<info		top="+50%"	text="Sound quality"/>
+		<up			top="+50%"/>
+		<down		top="+50%"/>
+	</sound_quality>
+
+
+	<sound			top="+60%"	template="interfaces">
+		<info		top="+60%"	text="Sound volume"/>
+		<plus		top="+60%"	template="interfaces/down"/>
+		<minus		top="+60%"	template="interfaces/up"/>
+	</sound>
+
+	<music			top="+70%"	template="sound">
+		<info		top="+70%"	text="Music volume"/>
+		<plus		top="+70%"/>
+		<minus		top="+70%"/>
+	</music>
+</options>

@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #ifndef _EDITOR_H_
@@ -18,10 +16,9 @@ class runner;
 //	Редактор карт
 //====================================================================
 class editor
-	:public modal
+	:public static_modal< editor >
 	,public base_maze
 	,public pen_handler
-	,public static_class< editor >
 {
 private:
 	cage	brush;
@@ -34,7 +31,7 @@ public:
 	void close();
 
 	//----------------------------------------------------------
-	void event(redraw *screen);
+	void event(redraw *screen, void*);
 
 	void pen_down(const point<> &pos);
 	void pen_move(const point<> &pos);

@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #ifndef _MAP_H_
@@ -13,7 +11,7 @@
 //==============================================================================
 //	карта отвечает за хранение клеток, генерацию, загрузку, сохранение и пр
 //==============================================================================
-class map : public array_xy<cage>
+class map : public array2d<cage>
 {
 private:
 	// создание путей на карте
@@ -30,14 +28,14 @@ private:
 					level_players;
 
 public:
-	map(const string &land_name, const array_size &s);	// создание чистой карты
+	map(const string &land_name, const size<> &s);	// создание чистой карты
 	map(const map &m, const rect<> &r);	// вырезание куска карты
-	map(xml &x, const array_size &s);	// загрузка
+	map(xml &x, const size<> &s);	// загрузка
 
 	void save(xml &x);
 
 	// генерация карты по параметрам
-	static map *generate(const string &land_name, const array_size &s, int density, int space, int ladders_size, 
+	static map *generate(const string &land_name, const size<> &s, int density, int space, int ladders_size, 
 		int soft, int hard, int ice, int mud, int rope,		
 		int cashs, int monsters, int items, int bombs, int boxes);
 	// примерная генерация карты

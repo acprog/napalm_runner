@@ -1,0 +1,48 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<terrain_bar
+	use_template_command="template"
+	title="Поверхности"
+	border="small_frame"
+	ground="tools"
+	width="186"
+	height="100">
+
+	<movement_region
+		right="+100%"
+		bottom="-32"/>
+
+	<ladder
+		left="+5"
+		top="+25"
+		width="32"
+		height="32"/>
+	<decor_far
+		template="ladder"
+        left="+40"/>
+	<decor_near
+		template="ladder"
+		left="+75"/>
+	<water
+		template="ladder"
+		left="+110"/>
+	<rope
+		template="ladder"
+        left="+145"/>
+	<hard
+		template="ladder"
+		top="+60"/>
+	<slow
+		template="hard"
+		left="+40"/>
+	<fast
+		template="hard"
+		left="+75"/>
+	<soft
+		template="hard"
+        left="+110"/>
+	<mirage
+		template="hard"
+		left="+145"/>
+</terrain_bar>

@@ -1,0 +1,81 @@
+<mpp_prefs
+	theme = "runner"
+	interface = "russian"
+	unlock_key = "2591-2010">
+	<screen
+		rotate = "0"/>
+	<keys
+		move_left = "37"
+		move_right = "39"
+		move_up = "38"
+		move_down = "40"
+		dig_left = "90"
+		dig_right = "88"
+		put_bomb = "32"
+		use_item = "67"
+		pause = "19"/>
+	<forms>
+		<minimap
+			x = "0"
+			y = "0"/>
+		<single
+			maze_size = "22"
+			difficult = "82"/>
+		<game_menu
+			x = "134"
+			y = "21"
+			music = "76"
+			sound = "72"/>
+		<create_map
+			maze_width = "88"
+			maze_height = "89"/>
+		<generate_maze
+			maze_density = "79"
+			maze_space = "50"
+			ladders_size = "5"
+			soft = "21"
+			hard = "17"
+			fast = "17"
+			slow = "17"
+			rope = "27"
+			cash = "0"
+			monsters = "0"
+			items = "0"
+			bombs = "0"
+			boxes = "0"/>
+		<terrain_bar
+			x = "38"
+			y = "188"/>
+		<register_now
+			x = "0"
+			y = "0"/>
+		<objects_bar
+			x = "76"
+			y = "0"/>
+		<options
+			music = "76"
+			sound = "72"/>
+		<register_now2
+			x = "352"
+			y = "0"/>
+	</forms>
+	<top10
+		n0 = "emajajalaoanbmajajgkalfm"
+		n1 = "emajajakakaoboajajgkales"
+		n2 = "emajajajasatbmajajgkalfm"
+		n3 = "emajajajapaqbkajajetayaxatem"
+		n4 = "emajajajalatbrajajetayaxaten"
+		n5 = "emajajajalajblajajgkaleu"
+		n6 = "emajajajakarbsajajgkalew"
+		n7 = "emajajajajasbsajajawju"
+		n8 = "emajajajajarbrajajgkaley"
+		n9 = "emajajajajarbrajajawjr"
+		prev_name = "AC">
+		<n10>emajajajajakbkajajolclbrnrnjboalbnbrbqaxblblgq</n10>
+	</top10>
+	<volume
+		sound = "72"
+		music = "76">
+		<sound_quality>hi</sound_quality>
+	</volume>
+</mpp_prefs>

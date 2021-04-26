@@ -1,0 +1,101 @@
+<?xml
+	version="1.0"
+	encoding="windows-1250"?>
+<generate_maze
+	use_template_command="template"
+	title="Labirynth generation"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+
+	<back
+		picture="exit"
+		left="+20"
+		top="-70"/>
+	<create
+		picture="editor"
+		left="-84"
+		top="-70"/>
+
+	<random
+		text="Random"
+   		left="+90"
+		right="-90"
+		height="35"
+		top="-57"/>
+
+	<all_scrolls
+		left="-33%"
+		width="25%"
+		height="32">
+		<info
+			align="right"
+			left="+5%"
+			width="60%"
+			height="32"/>
+	</all_scrolls>
+
+	<ladders_size		top="+20%"		template="all_scrolls"		left="-55"	 	width="48">
+		<info			top="+20%"		text="Lenght of ladders"		left="+55%"		width="27%"/>
+	</ladders_size>
+	
+	<maze_space			top="+10%"		template="all_scrolls">
+		<info			top="+10%"		text="Free space"/>
+	</maze_space>
+
+	<soft				top="+30%"		template="all_scrolls"		left="-55"		width="48">
+	    <minus			top="+30%"		picture="minus"				left="-112"/>
+	    <plus			top="+30%"		picture="plus"				left="-85"/>
+		<info			top="+30%"		text="Ground"				left="+40%"		width="24%"/>
+	</soft>
+
+	<hard				top="+40%"		template="soft">
+		<plus			top="+40%"/>
+		<minus			top="+40%"/>
+		<info			top="+40%"		text="Stone"/>
+	</hard>
+
+	<fast				top="+50%"		template="soft">
+		<plus			top="+50%"/>
+		<minus			top="+50%"/>
+		<info			top="+50%"		text="Ice"/>
+	</fast>
+
+	<slow				top="+60%"		template="soft">
+		<plus			top="+60%"/>
+		<minus			top="+60%"/>
+		<info			top="+60%"		text="Mud"/>
+	</slow>
+
+	<rope				top="+70%"		template="soft">
+		<plus			top="+70%"/>
+		<minus			top="+70%"/>
+		<info			top="+70%"		text="Ropes"/>
+	</rope>
+
+	<maze_density		top="+20%"		template="all_scrolls"		left="+28%"	width="15%">
+		<info			top="+20%"		text="Difficulty"			left="+2%"	width="25%"/>
+	</maze_density>
+
+	<boxes				top="+30%"		template="all_scrolls"		left="+28%"		width="15%">
+		<info			top="+30%"		text="Boxes"				left="+2%"		width="25%"/>
+	</boxes>
+
+	<cash				top="+40%"		template="maze_density">
+		<info			top="+40%"		text="Gold"/>
+	</cash>
+
+	<monsters			top="+50%"		template="cash">
+		<info			top="+50%"		text="Monsters"/>
+	</monsters>
+
+	<items				top="+60%"		template="cash">
+		<info			top="+60%"		text="Items"/>
+	</items>
+
+	<bombs				top="+70%"		template="cash">
+		<info			top="+70%"		text="Bombs"/>
+	</bombs>
+</generate_maze>
+

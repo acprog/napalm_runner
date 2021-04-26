@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #ifndef _CAGE_H_
@@ -49,7 +47,6 @@ enum item_type
 //========================================================================
 union cage
 {
-//private:
 private:
 	uint8		value;
 

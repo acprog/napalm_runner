@@ -1,0 +1,19 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<game_bar
+	use_template_command="template"
+	border="bar"
+	top="-32"
+	width="100%"
+	height="32">
+	<all
+		top="+0"
+		width="32"
+		height="32"/>
+	<lives	template="all"	left="+5"		top="+5" picture="lives"/>
+	<bombs	template="all"	left="+20%"/>
+	<cash	template="all"	left="+40%"		top="+5" picture="cash"/>
+	<item	template="all"	left="+65%"/>
+	<menu	template="all"	left="-25%"		width="25%"	text="Μενώ"/>
+</game_bar>

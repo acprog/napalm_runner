@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #ifndef _OBJECTS_H_
@@ -23,42 +21,11 @@ typedef	player			player_move;
 typedef	monster			monster_move;
 
 
-struct crash_on_cage
-{
-	broken_cage	*p;
-};
-
-// подобрать предмет
-struct	grab_item
-{
-	item_type	*item;
-	point<>		pos;
-	bool		grabbed;
-};
-
-// дверь активна
-struct door_active
-{
-	point<>	pos;
-};
-
-
-//====================================================================
-// отрисовка объектов на карте
-struct draw_on_minimap
-{
-	minimap	*p;
-	image	*screen;	
-};
-
-
-// проверка передвижения для коробки
-struct	check_box_move
-{
-	point<>		from,
-				to;
-	bool		pass;
-};
+class crash_on_cage;
+class grab_item;
+class door_active;
+class draw_on_minimap;
+class check_box_move;
 
 
 
@@ -67,14 +34,12 @@ struct	check_box_move
 //====================================================================
 class creature
 	:public motion_object
-	,public static_extern< handler<burst>, game >
-	,public static_extern< send_up<creature_move>, game >
-	,public static_extern< send_up<check_creature_move>, game >
-	,public static_extern< handler<ice_smoke>, game >
-	,public static_extern< handler<pile>, game >
-	,public static_extern< handler<box>, game >
-	,public static_extern< handler<crash_on_cage>, game >
-	,public static_extern< handler<check_box_move>, game >
+	,public static_source< handler<burst>, game >
+	,public static_source< handler<ice_smoke>, game >
+	,public static_source< handler<pile>, game >
+	,public static_source< handler<box>, game >
+	,public static_source< handler<crash_on_cage>, game >
+	,public static_source< handler<check_box_move>, game >
 {
 protected:
 	point<>		birth_pos;
@@ -126,13 +91,13 @@ public:
 	creature(const point<> &pos, const	animation *anims);
 	
 
-	void event(timer *t);
-	void event(burst *b);
-	void event(crash_on_cage *c);
-	void event(ice_smoke *f);
-	void event(pile *p);
-	void event(box *b);
-	void event(check_box_move *m);
+	void event(timer *t, void*);
+	void event(burst *b, void*);
+	void event(crash_on_cage *c, void*);
+	void event(ice_smoke *f, void*);
+	void event(pile *p, void*);
+	void event(box *b, void*);
+	void event(check_box_move *m, void*);
 
 	bool check_dpos(const point<> &dpos);
 	void clash(bool after_drop, box *box);
@@ -162,12 +127,9 @@ struct player_info
 class player
 	:public player_info
 	,public creature
-	,public static_extern< handler<key_down>, game >
-	,public static_extern< handler<key_up>, game >
-	,public static_extern< send_up<player_move>, game >
-	,public static_extern< send_up<grab_item>, game >
-	,public static_extern< handler<door_active>, game >
-	,public static_extern< send_up<check_pile>, game>
+	,public static_source< handler<key_down>, game >
+	,public static_source< handler<key_up>, game >
+	,public static_source< handler<door_active>, game >
 {
 private:
 	player_info	startup_info;
@@ -211,10 +173,10 @@ public:
 
 	void set_info_ptrs() const;
 
-	void event(key_down *p);
-	void event(key_up *p);
-	void event(timer *t);
-	void event(door_active *d);
+	void event(key_down *p, void*);
+	void event(key_up *p, void*);
+	void event(timer *t, void*);
+	void event(door_active *d, void*);
 	
 	bool pass_event(draw_objects *p);
 
@@ -240,9 +202,8 @@ public:
 //====================================================================
 class monster
 	:public creature
-	,public static_extern< handler<player_move>, game >
-	,public static_extern< send_up<monster_move>, game >
-	,public static_extern< handler<draw_on_minimap>, minimap>
+	,public static_source< handler<player_move>, game >
+	,public static_source< handler<draw_on_minimap>, minimap>
 {
 private:
 	player			*target;
@@ -252,10 +213,10 @@ public:
 	monster(const point<> &pos, player *target);
 	void move_to_target();
 
-	void event(timer *t);
-	void event(player_move *p);
-	void event(pile *p);
-	void event(draw_on_minimap *p);
+	void event(timer *t, void*);
+	void event(player_move *p, void*);
+	void event(pile *p, void*);
+	void event(draw_on_minimap *p, void*);
 
 	bool search_way(point<> &pos, const point<> &to);
 	bool check_dpos(const point<> &pos, const point<> &dpos);
@@ -274,7 +235,7 @@ public:
 //====================================================================
 class bomb
 	:public animated_object
-	,public static_extern<handler<burst>, game>
+	,public static_source<handler<burst>, game>
 {
 private:
 	animated_state	fire;
@@ -284,8 +245,8 @@ private:
 public:
 	bomb(const point<> &pos);
 
-	void event(timer *t);
-	void event(burst *b);
+	void event(timer *t, void*);
+	void event(burst *b, void*);
 };
 
 
@@ -296,7 +257,6 @@ public:
 //====================================================================
 class burst
 	:public animated_object
-	,public static_extern<send_up<burst>, game>
 {
 private:
 	animated_state	explosion;
@@ -304,7 +264,7 @@ private:
 public:
 	burst(const point<> &pos);
 
-	void event(timer *t);
+	void event(timer *t, void*);
 
 	bool pass_event(draw_objects *p);
 
@@ -320,11 +280,9 @@ public:
 //====================================================================
 class broken_cage
 	:public animated_object
-	,public static_extern<handler<burst>, game>
-	,public static_extern<handler<creature_move>, game>
-	,public static_extern<handler<monster_move>, game>
-	,public static_extern<send_up<broken_cage>, game>
-	,public static_extern<send_up<crash_on_cage>, game>
+	,public static_source<handler<burst>, game>
+	,public static_source<handler<creature_move>, game>
+	,public static_source<handler<monster_move>, game>
 {
 private:
 	animated_state	make;
@@ -335,11 +293,11 @@ public:
 	//--------------------------------------------------------------------
 	broken_cage(const point<> &pos, bool exploded=false);
 
-	void event(draw_objects *p);
-	void event(timer *t);
-	void event(burst *b);
-	void event(monster_move *mv);
-	void event(creature_move *c);
+	void event(draw_objects *p, void*);
+	void event(timer *t, void*);
+	void event(burst *b, void*);
+	void event(monster_move *mv, void*);
+	void event(creature_move *c, void*);
 };
 
 
@@ -351,8 +309,8 @@ public:
 //====================================================================
 class trap
 	:public object
-	,public	static_extern< handler<creature_move>, game >
-	,public	static_extern< handler<burst>, game >
+	,public	static_source< handler<creature_move>, game >
+	,public	static_source< handler<burst>, game >
 {
 private:
 	object_state	wait;
@@ -361,8 +319,8 @@ public:
 	trap(const point<> &pos);
 
 	//------------------------------------------------------------------
-	void event(burst *b);
-	void event(creature_move *c);
+	void event(burst *b, void*);
+	void event(creature_move *c, void*);
 };
 
 
@@ -375,9 +333,9 @@ public:
 //====================================================================
 class dropped
 	:public animated_object
-	,public static_extern< handler<creature_move>, game >
-	,public static_extern< handler<grab_item>, game>
-	,public	static_extern< handler<burst>, game >
+	,public static_source< handler<creature_move>, game >
+	,public static_source< handler<grab_item>, game>
+	,public	static_source< handler<burst>, game >
 {
 private:
 	item_type		item;
@@ -385,10 +343,10 @@ private:
 public:
 	dropped(const point<> &pos, item_type _item);
 
-	void event(creature_move *c);
-	void event(grab_item *g);
-	void event(draw_objects *p);
-	void event(burst *b);
+	void event(creature_move *c, void*);
+	void event(grab_item *g, void*);
+	void event(draw_objects *p, void*);
+	void event(burst *b, void*);
 };
 
 
@@ -401,16 +359,15 @@ public:
 //====================================================================
 class ice_smoke
 	:public animated_object
-	,public static_extern< handler<creature_move>, game>
-	,public static_extern< send_up<ice_smoke>, game>
+	,public static_source< handler<creature_move>, game>
 {
 private:
 	animated_state	wait;
 
 public:
 	ice_smoke(const point<> &pos, bool _mirror);
-	void event(timer *t);
-	void event(creature_move *c);
+	void event(timer *t, void*);
+	void event(creature_move *c, void*);
 };
 
 
@@ -420,9 +377,8 @@ public:
 //====================================================================
 class pile
 	:public motion_object
-	,public static_extern<handler<burst>, game>
-	,public static_extern<handler<check_move>, game>
-	,public static_extern<send_up<pile>, game>
+	,public static_source<handler<burst>, game>
+	//,public static_source<handler<check_move>, game>
 {
 private:
 	animated_state	make,
@@ -432,10 +388,10 @@ private:
 public:
 	pile(const point<> &pos);
 
-	void event(timer *t);
-	void event(burst *b);
-	void event(check_move *m);
-	void event(draw_objects *p);
+	void event(timer *t, void*);
+	void event(burst *b, void*);
+	void event(check_move *m, void*);
+	void event(draw_objects *p, void*);
 
 	void set_move_state(move_type type);
 	void clash(bool after_drop, box *box);
@@ -450,8 +406,6 @@ public:
 class box
 	:public motion_object
 	,public handler<burst>
-	,public send_up<box>
-	,public send_up<check_box_move>
 {
 private:
 	object_state	wait;
@@ -460,9 +414,9 @@ private:
 public:
 	box(const point<> &pos);
 
-	void event(burst *b);
-	void event(check_move *m);
-	void event(timer *t);
+	void event(burst *b, void*);
+	void event(check_move *m, void*);
+	void event(timer *t, void*);
 
 	void clash(bool after_drop, box *box);
 	void set_move_state(move_type type);
@@ -488,10 +442,10 @@ private:
 public:
 	piece(const point<> &pos, const point<> &burst_pos, sound *_punch, const animation &_anims, int _n_anims=0);
 
-	void event(check_move *m);
-	void event(object_move *m);
-	void event(timer *t);
-	void event(draw_objects *p);
+	void event(check_move *m, void*);
+	void event(object_move *m, void*);
+	void event(timer *t, void*);
+	void event(draw_objects *p, void*);
 
 	void set_move_state(move_type type);
 	void need_drop();

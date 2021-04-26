@@ -1,0 +1,39 @@
+body
+{
+	font-family:serif;
+	color: #fff689;
+	border-color: #fff689;
+	background-image: url(background.gif);
+	background-color: #000000;
+}
+
+a
+{
+	color: #fff689;
+}
+
+a:visited
+{
+	color: #a8a149;
+}
+
+a:hover
+{
+	color: #ffffff;
+}
+
+img
+{
+	border-color: #a8a149;
+	border-width: 2px;
+	border-style: solid;
+	padding:1px;
+	margin:2px;
+}
+
+h2
+{
+	font-size: 120%;
+	font-weight: bold;
+	text-align: right;
+}

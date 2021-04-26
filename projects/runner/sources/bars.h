@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #ifndef _BARS_H_
@@ -15,7 +13,7 @@
 class game;
 class editor;
 class map;
-struct draw_on_minimap;
+class draw_on_minimap;
 
 using controls::form;
 using controls::button;
@@ -28,9 +26,8 @@ using controls::text_string;
 //	main menu
 //========================================================================
 class main_menu
-	:public form
-	,public modal
-	,public static_class<main_menu>
+	:public static_modal<main_menu>
+	,public form
 {
 private:
 	text_string
@@ -49,7 +46,7 @@ private:
 public:
 	main_menu();
 	virtual ~main_menu(){}
-	void event(controls::button *b);
+	void event(controls::button *b, void*);
 };
 
 
@@ -59,10 +56,9 @@ public:
 //	top10
 //========================================================================
 class top10
-	:public form
-	,public modal
-	,public static_class<top10>
-	,public no_extern<handler<controls::keyboard> >
+	:public static_modal<top10>
+	,public form
+	,public handler<controls::keyboard>
 {
 private:
 	button		back,
@@ -76,8 +72,8 @@ private:
 public:
 	top10(int score=0);
 	~top10();
-	void event(button *b);
-	void event(controls::keyboard *k);
+	void event(button *b, void*);
+	void event(controls::keyboard *k, void*);
 };
 
 
@@ -89,9 +85,8 @@ public:
 //	Game options
 //========================================================================
 class options
-	:public form
-	,public modal
-	,public static_class<options>
+	:public static_modal<options>
+	,public form
 {
 private:
 	button
@@ -110,8 +105,8 @@ private:
 public:
 	options();
 	~options();
-	void event(button *b);
-	void event(controls::digital *d);
+	void event(button *b, void*);
+	void event(controls::digital *d, void*);
 
 	bool pass_event(redraw *screen);
 };
@@ -122,10 +117,9 @@ public:
 //	Try again
 //========================================================================
 class try_again
-	:public form
-	,public modal
-	,public static_class<try_again>
-	,public no_extern<handler <timer> >
+	:public static_modal<try_again>
+	,public form
+	,public handler<timer>
 {
 private:
 	text_string	message;
@@ -134,7 +128,7 @@ private:
 
 public:
 	try_again(player_info pi);
-	void event(timer *t);
+	void event(timer *t, void*);
 	void pen_down(const point<> &p);
 	void pen_up(const point<> &p);
 };
@@ -146,9 +140,8 @@ public:
 //	Level complete
 //========================================================================
 class level_complete
-	:public form
-	,public modal
-	,public static_class<level_complete>
+	:public static_modal<level_complete>
+	,public form	
 {
 private:
 	picture		banner;
@@ -157,7 +150,7 @@ private:
 
 public:
 	level_complete(player_info pi);
-	void event(key_down *k);
+	void event(key_down *k, void*);
 	void pen_up(const point<> &p);
 };
 
@@ -168,9 +161,8 @@ public:
 //	game over
 //========================================================================
 class game_over
-	:public form
-	,public modal
-	,public static_class<game_over>
+	:public static_modal<game_over>
+	,public form	
 {
 private:
 	picture		banner;
@@ -179,7 +171,7 @@ private:
 
 public:
 	game_over(int score);
-	void event(key_down *k);
+	void event(key_down *k, void*);
 	void pen_up(const point<> &p);
 };
 
@@ -192,9 +184,8 @@ public:
 //	Make Random map
 //========================================================================
 class random_map
-	:public form
-	,public modal
-	,public static_class<random_map>
+	:public static_modal<random_map>
+	,public form
 {
 private:
 	size<>	s;
@@ -221,8 +212,8 @@ private:
 	
 public:
 	random_map(const size<>	&s, const string &name, const string &land);
-	void event(button *b);
-	void event(controls::digital *d);
+	void event(button *b, void*);
+	void event(controls::digital *d, void*);
 };
 
 
@@ -232,7 +223,7 @@ public:
 class minimap
 	:public form
 	,public static_class<minimap>
-	,public no_extern<send_down<draw_on_minimap> >
+	,public dispatcher<draw_on_minimap>
 {
 private:
 	image			img;
@@ -249,7 +240,7 @@ private:
 
 public:
 	minimap(const size<> &mm_size, const map &cages, const point<> &linkview);
-	void event(redraw *screen);
+	void event(redraw *screen, void*);
 	void set_view(const point<> &p);
 	void erase_point(const point<> &p);
 	void draw_point(image &screen, const point<> &p, COLOR c);
@@ -265,7 +256,6 @@ public:
 class game_bar
 	:public form
 	,public static_class<game_bar>
-	,public static_extern< auto_free, game >
 {
 private:
 	const	int		*n_lives,
@@ -280,23 +270,24 @@ private:
 	//=======================================================================================
 	class item
 		:public virtual_key
-		,public static_extern<auto_free, game_bar>
+		,public dobject
 	{
 	private:
 		const	item_type	*i;
 
 	public:
 		item(form *parent, const item_type *_item);
-		void event(redraw *screen);
+		void event(redraw *screen, void*);
 	};
 
+	ptr_list<item>	items;
 
 	//=====================================================================================
 public:
 
 	game_bar();
-	void event(redraw *screen);
-	void event(button *b);
+	void event(redraw *screen, void*);
+	void event(button *b, void*);
 	void set(const int *_lives, const int *_bombs, const int *_cash, const item_type *_item);
 };
 
@@ -309,7 +300,6 @@ public:
 class game_menu
 	:public form
 	,public static_class<game_menu>
-	,public static_extern< auto_free, game >
 {
 private:
 	button	exit,
@@ -324,8 +314,8 @@ private:
 
 public:
 	game_menu();
-	void event(button *b);
-	void event(controls::digital *d);
+	void event(button *b, void*);
+	void event(controls::digital *d, void*);
 };
 
 
@@ -338,10 +328,9 @@ public:
 //	Maps manager
 //========================================================================
 class maps_manager
-	:public form
-	,public modal
-	,public static_class<maps_manager>
-	,public no_extern<handler<controls::keyboard> >
+	:public static_modal<maps_manager>
+	,public form
+	,public handler<controls::keyboard>
 {
 private:
 	button
@@ -357,9 +346,9 @@ private:
 
 public:
 	maps_manager();
-	void event(button *b);
-	void event(controls::list *l);
-	void event(controls::keyboard *k);
+	void event(button *b, void*);
+	void event(controls::list *l, void*);
+	void event(controls::keyboard *k, void*);
 };
 
 
@@ -369,9 +358,8 @@ public:
 //	Создание карты для редактирования
 //========================================================================
 class create_map
-	:public form
-	,public modal
-	,public static_class<create_map>
+	:public static_modal<create_map>
+	,public form
 {
 private:
 	button
@@ -388,7 +376,7 @@ private:
 
 public:
 	create_map();
-	void event(button *b);
+	void event(button *b, void*);
 };
 
 
@@ -398,9 +386,8 @@ public:
 // Single game
 //========================================================================
 class single
-	:public form
-	,public modal
-	,public static_class<single>
+	:public static_modal<single>
+	,public form
 {
 private:
 	button
@@ -416,7 +403,7 @@ private:
 
 public:
 	single();
-	void event(button *b);
+	void event(button *b, void*);
 };
 
 
@@ -425,9 +412,8 @@ public:
 //	Adventure
 //========================================================================
 class adventure
-	:public form
-	,public modal
-	,public static_class<adventure>
+	:public static_modal<adventure>
+    ,public form
 {
 private:
 	button
@@ -449,8 +435,8 @@ private:
 
 public:
 	adventure();
-	void event(button *b);
-	void event(controls::list *l);
+	void event(button *b, void*);
+	void event(controls::list *l, void*);
 };
 
 
@@ -462,7 +448,6 @@ public:
 class edit_bar
 	:public form
 	,public static_class<edit_bar>
-	,public static_extern< auto_free, editor >
 {
 private:
 	button
@@ -477,7 +462,7 @@ private:
 
 public:
 	edit_bar();
-	void event(button *b);
+	void event(button *b, void*);
 };
 
 
@@ -488,7 +473,6 @@ public:
 class objects_bar
 	:public form
 	,public static_class<objects_bar>
-	,public static_extern< auto_free, editor >
 {
 private:
 	button
@@ -510,7 +494,7 @@ private:
 
 public:
 	objects_bar();
-	void event(button *b);
+	void event(button *b, void*);
 };
 
 
@@ -521,7 +505,6 @@ public:
 class terrain_bar
 	:public form
 	,public static_class<terrain_bar>
-	,public static_extern< auto_free, editor >
 {
 private:
 	//-------------------------------------------------------------
@@ -530,7 +513,7 @@ private:
 	{
 	public:
 		terrain(form *_parent, const string &name, const	animation	&anims);
-		void event(redraw *screen);
+		void event(redraw *screen, void*);
 	};
 
 	//-------------------------------------------------------------
@@ -548,7 +531,7 @@ private:
 
 public:
 	terrain_bar();
-	void event(button *b);
+	void event(button *b, void*);
 };
 
 

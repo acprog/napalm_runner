@@ -1,0 +1,21 @@
+<?xml
+	version="1.0"
+	encoding="windows-1250"?>
+<level_complete
+	title="Level Complete"
+	border="form"
+	ground="tools"
+	width="100%"
+	height="100%">
+	<level_complete
+		left="center-120"
+		top="center-120"
+		width="240"
+		height="240"/>
+	<info
+		text="Press any key to continue"
+		left="+5%"
+		top="-15%"
+		width="90%"
+		bottom="-5%"/>
+</level_complete>

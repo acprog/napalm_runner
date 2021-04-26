@@ -1,0 +1,80 @@
+<?xml
+	version="1.0"
+	encoding="windows-1250"?>
+<create_map
+	use_template_command="template"
+	title="Create new map"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+
+	<back
+		picture="exit"
+		left="+20"
+		top="-70"/>
+	<create
+		picture="editor"
+		left="-84"
+		top="-70"/>
+
+	<random
+		text="Auto"
+   		left="+90"
+		right="-90"
+		height="35"
+		top="-58"/>
+
+	<name
+		text="New Maze"
+		left="+10%"
+		top="+32"
+		right="-10%"
+		height="32"/>
+
+	<maze_width
+		left="-30%"
+		top="+25%"
+		right="-8"
+		height="32">
+        <plus
+			picture="plus"
+        	left="-40"
+        	top="+35%"/>
+		<minus
+			template="maze_width/plus"
+			picture="minus"
+			left="-30%"
+			top="+35%"/>
+		<info
+			text="Width"
+			align="right"
+			left="+50%"
+			top="+25%"
+			width="20%"
+			height="32"/>
+	</maze_width>
+
+	<maze_height
+		template="maze_width"
+		top="+55%">
+		<plus	top="+65%"/>
+		<minus	top="+65%"/>
+		<info	top="+55%"	text="Height"/>
+	</maze_height>
+
+	<lands
+		left="+5%"
+		top="+80"
+		right="center-32"
+		bottom="-80">
+		<up
+			picture="up"
+			left="center-32"
+			top="+80"/>
+		<down
+			picture="down"
+			left="center-32"
+			top="-96"/>
+	</lands>
+</create_map>

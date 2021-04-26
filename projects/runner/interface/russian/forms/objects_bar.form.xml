@@ -1,0 +1,36 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<objects_bar
+	use_template_command="template"
+	title="Îáúåêòû"
+	border="small_frame"
+	ground="tools"
+	left="-148"
+	width="148"
+	height="135">
+
+   	<movement_region
+		right="+100%"
+		bottom="-32"/>
+
+	<key
+		left="+5"
+		top="+25"
+		width="32"
+		height="32"/>
+	
+	<door		template="key"      left="+40"/>
+	<player		template="key"		left="+75"/>
+	<monster	template="key"		left="+110"/>
+	
+	<trap		template="key"		top="+60"/>
+	<pick		template="trap"		left="+40"/>
+	<freeze		template="trap"		left="+75"/>
+	<box		template="trap"		left="+110"/>
+	
+    <lo_cash	template="key"		top="+95"/>
+	<med_cash	template="lo_cash"	left="+40"/>
+	<hi_cash	template="lo_cash"	left="+75"/>
+	<bomb		template="lo_cash"	left="+110"/>
+</objects_bar>

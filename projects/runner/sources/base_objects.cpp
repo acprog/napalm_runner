@@ -1,13 +1,11 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #include "base_objects.h"
 #include "maze.h"
 #include "game.h"
-
+#include "events.h"
 
 
 //====================================================================
@@ -77,7 +75,7 @@ bool object::pass_event(draw_objects *p)
 
 
 //====================================================================
-void object::event(draw_objects *p)
+void object::event(draw_objects *p, void*)
 {
 	state->draw(p->screen, *ani, pos_on_screen()+maze::get().screen_offset(), turn_to_right);
 }
@@ -158,7 +156,7 @@ motion_object::motion_object(const point<> &pos,  const animation *ani, const si
 
 
 //====================================================================
-void motion_object::event(dynamic_point *p)
+void motion_object::event(dynamic_point *p, void*)
 {
 	if (dynamic.speed().out().y>CAGE_SIZE)
 	{
@@ -222,12 +220,8 @@ void motion_object::event(dynamic_point *p)
 // возможность дальнейшего перемещения
 bool motion_object::check_dpos(const point<> &dpos)
 {
-	check_move	pm;
-	pm.from=pm.to=pos_on_map();
-	pm.to+=dpos;	
-	pm.pass=true;
-	pm.box=NULL;
-	send(&pm, this);
+	check_move	pm(pos_on_map(), dpos);
+	send(&pm);
 	if (!pm.pass)
 	{
 		// откат - перемещение невозможно
@@ -245,7 +239,7 @@ bool motion_object::check_dpos(const point<> &dpos)
 
 
 //====================================================================
-void motion_object::event(object_move *p)
+void motion_object::event(object_move *p, void*)
 {
 	if (p->obj->pos_on_map()==pos_on_map().y_offset(-1) && p->type==move_drop)
 		p->type=move_normal;	// если объект переместился в клетку надомной
@@ -265,12 +259,9 @@ void motion_object::move_to(const point<> &new_cage, bool teleport)
 	// узнаем тип передвижения и необходимость падения
 	bool	drop=(mtype==move_drop);
 
-	object_move	om;
-	om.obj=this;
-	om.prev_pos=pos_on_map();
+	object_move	om(this, move_drop);
 	pos_on_map()=new_cage;
-	om.type=move_drop;
-	send(&om, this);
+	send(&om);
 	
 	//---------------------------------------------------------------------
 	if (teleport)
@@ -418,7 +409,7 @@ void motion_object::need_drop()
 
 
 //====================================================================
-void motion_object::event(check_move *p)
+void motion_object::event(check_move *p, void*)
 {
 	if (p->from.y!=p->to.y && pos_on_map()==p->to)
 		if (p->pass)
@@ -448,7 +439,7 @@ void motion_object::center_x()
 
 
 //====================================================================
-void motion_object::event(check_pile *p)
+void motion_object::event(check_pile *p, void*)
 {
 	if (p->pos==pos_on_map())
 		p->possible=false;
@@ -456,7 +447,7 @@ void motion_object::event(check_pile *p)
 
 
 //====================================================================
-void motion_object::event(broken_cage *b)
+void motion_object::event(broken_cage *b, void*)
 {
 	if (b->pos_on_map()==pos_on_map().y_offset(1))
 		if (check_dpos(point<>(0, 1)))

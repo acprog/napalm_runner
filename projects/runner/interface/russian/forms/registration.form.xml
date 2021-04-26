@@ -1,0 +1,45 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<registration
+	use_template_command="template"
+	title="Регистрация программы"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+
+	<back
+		picture="exit"
+		left="+5%"
+		top="-96"/>
+
+	<site
+		text="www.napalm-games.com"
+		left="+5%"
+		right="-5%"
+		top="+20%"
+		height="10%">
+		<info
+			text="Чтобы купить программу посетите наш сайт"
+			left="+5%"
+			right="-5%"
+			top="+10%"
+			height="10%"/>
+	</site>
+
+	<copy		top="+45%"		text="xxxx-xxxx"	template="site">
+		<info	top="+35%"		text="Номер вашей копии"/>
+	</copy>
+
+	<key		
+		template="site"
+        text="xxxx-xxxx"
+		top="-96"
+		left="+35%"
+		width="60%"
+		height="64"
+		>
+		<info	top="+60%"		text="Ключ для полной версии:"/>
+	</key>
+</registration>

@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #ifndef _MAZE_H_
@@ -22,8 +20,8 @@ class game;
 //	лабиринт
 //===============================================================
 class base_maze 
-	:public no_extern< handler<timer> >
-	,public static_extern< send_down<cycle>, application >
+	:public handler<timer>
+	,public static_source< dispatcher<cycle>, application >
 {
 protected:
 	rect<>			on_screen;
@@ -57,7 +55,7 @@ public:
 
 	//------------------------------------------------------------
 	void draw(image *screen, bool draw);
-	void event(timer *t){};	// нужно не само событие, а его позиция во времени
+	void event(timer *t, void*){};	// нужно не само событие, а его позиция во времени
 
 	//------------------------------------------------------------
 	void	center_to(const point<> &pos, const size<> &window);
@@ -73,15 +71,13 @@ public:
 class maze 
 	:public base_maze
 	,public static_class<maze>
-	,public static_extern< auto_free, game >
-	,public static_extern< handler<check_move>, game >
-	,public static_extern< handler<check_creature_move>, game >
-	,public static_extern< handler<object_move>, game >
-	,public static_extern< handler<creature_move>, game >
-	,public static_extern< handler<burst>, game >
-	,public static_extern< handler<grab_item>, game>
-	,public static_extern< send_up<door_active>, game>
-	,public static_extern< handler<check_pile>, game> 
+	,public static_source< handler<check_move>, game >
+	,public static_source< handler<check_creature_move>, game >
+	,public static_source< handler<object_move>, game >
+	,public static_source< handler<creature_move>, game >
+	,public static_source< handler<burst>, game >
+	,public static_source< handler<grab_item>, game>
+	,public static_source< handler<check_pile>, game> 
 {
 private:
 	point<>			door;
@@ -98,13 +94,13 @@ public:
 	maze(map *map);
 
 	//------------------------------------------------------------
-	void event(burst *b);
-	void event(check_move *nd);
-	void event(check_creature_move *nd);
-	void event(object_move *nd);
-	void event(creature_move *c);
-	void event(grab_item *g);
-	void event(check_pile *p);
+	void event(burst *b, void*);
+	void event(check_move *nd, void*);
+	void event(check_creature_move *nd, void*);
+	void event(object_move *nd, void*);
+	void event(creature_move *c, void*);
+	void event(grab_item *g, void*);
+	void event(check_pile *p, void*);
 
 	//------------------------------------------------------------
 	void	copy_cage(image &dst, const point<> &pos);

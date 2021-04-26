@@ -1,0 +1,8 @@
+<win32_prefs
+	sound = "yes">
+	<window
+		width = "480"
+		height = "320"
+		x = "213"
+		y = "230"/>
+</win32_prefs>

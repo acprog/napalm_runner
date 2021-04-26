@@ -1,0 +1,53 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<register_now
+	use_template_command="template"
+	border="small_frame"
+	ground="tools"
+	width="100%"
+	height="40%">
+
+	<movement_region
+		right="+100%"
+		bottom="-32"/>
+
+	<text1
+		text="Подсказки:"
+		align="left"
+		left="+5"
+		top="+4%"
+		right="-10"
+		height="20"/>
+
+	<text11
+		template="text1"
+		top="+16%"
+		text="* В игре удобно управлять стилом."/>
+
+	<text2
+		template="text1"
+		top="+28%"
+		text="* Без музыки игра будет"/>
+
+	<text3
+		template="text1"
+		top="+40%"
+		text="   загружаться быстрее"/>
+
+	<text4
+		template="text1"
+		top="+52%"
+		text="* Чтобы убрать это окно,зарегестрируйтесь"/>
+
+	<text5
+		template="text1"
+		top="+64%"
+		text="   (снизу справа) в главном меню"/>
+
+	<text6
+		template="text1"
+		top="+76%"
+		text="* Игровые окна можно перемещать стилом"/>
+</register_now>
+

@@ -1,0 +1,20 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<edit_bar
+	use_template_command="template"
+	border="bar"
+	top="-32"
+	width="100%"
+	height="32">
+	<all
+		top="+0"
+		width="22"
+		bottom="-0"/>
+	<show_minimap	template="all"	left="+15"		picture="map"/>
+	<paint_erase	template="all"	left="+50"		picture="erase"/>
+	<paint_ground	template="all"	left="+85"		picture="paint_ground"/>
+	<paint_objects	template="all"	left="+120"		picture="objects"/>
+	<undo_all		template="all"	left="+155"		picture="undo"/>
+	<exit			template="all"	left="-30%"		width="27%"	text="Выход"/>
+</edit_bar>

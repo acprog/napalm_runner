@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #ifndef _BASE_OBJECTS_H_
@@ -21,24 +19,13 @@ class object;
 class box;
 class broken_cage;
 
-//====================================================================
-// отрисовать план
-struct	draw_objects
-{
-
-	bool	bursts_only;
-	image	*screen;
-	rect<>	window;		// окно для отрисовки в координатах maze
-};
-
-
-// возможность использования кирки
-struct check_pile
-{
-	point<> pos;
-	bool	possible;
-};
-
+//-----------------------------------------------------------
+// игровые события
+class object_move;
+class draw_objects;
+class check_pile;
+class check_move;
+class check_creature_move;
 
 //====================================================================
 // тип передвижения (зависит от поверхности)
@@ -56,33 +43,6 @@ enum	move_type
 };
 
 
-// объектом клетки
-struct object_move
-{
-	motion_object	*obj;
-    point<>			prev_pos;
-	move_type		type;
-};
-
-
-
-// проверка передвижения для всех объектов
-struct	check_move
-{
-	point<>		from,
-				to;
-	bool		pass;
-	box			*box;	// если путь преграждает коробка
-};
-
-
-// проверка передвижения для созданий
-struct	check_creature_move
-{
-	point<>		from,
-				to;
-	bool		pass;
-};
 
 
 //====================================================================
@@ -148,9 +108,9 @@ class animated_state
 {
 private:
 	//--------------------------------------------------------------------
-	void event(cycle *c)
+	void event(cycle *c, void*)
 	{
-		timer::event(c);
+		timer::event(c, this);
 		n_frame=progress();
 	}
 
@@ -179,9 +139,9 @@ class reversed_state
 {
 private:
 	//--------------------------------------------------------------------
-	void event(cycle *c)
+	void event(cycle *c, void*)
 	{
-		timer::event(c);
+		timer::event(c, this);
 		n_frame=1-progress();
 	}
 
@@ -214,8 +174,8 @@ public:
 //====================================================================
 class object 
 	:public rect<>
-	,public static_extern< auto_free, game >
-	,public static_extern< handler<draw_objects>, game >
+	,public dobject
+	,public static_source< handler<draw_objects>, game >
 {
 private:
 	point<>		pos;			// координаты на плоскости лабиринта
@@ -230,12 +190,21 @@ protected:
 	const	static	first_frame;
 	const	static	last_frame;
 
+	//=======================================================
+	// передача сообщения
+	template<class T>
+	inline void send(T *ev, handler<T> &dest=game::get())
+	{
+		dest.event(ev, this);
+	}
+
 public:
 	object(const point<> &pos, const animation *ani=NULL, const size<> &s=size<>(1, 1)*CAGE_SIZE);
+	virtual ~object() { LOG("remove game object"); }
 
-	void event(timer *t){};
-	void event(burst *b){};
-	void event(draw_objects *p);
+	void event(timer *t, void*){};
+	void event(burst *b, void*){};
+	void event(draw_objects *p, void*);
 
 	//------------------------------------------------------------------------
 	bool pass_event(draw_objects *p);
@@ -272,7 +241,7 @@ public:
 //====================================================================
 class animated_object
 	:public object
-	,public no_extern< handler<timer> >
+	,public handler<timer>
 {
 protected:
 	animated_state	*mstate;
@@ -282,7 +251,7 @@ public:
 	//------------------------------------------------------------------------
 	void set_state(object_state	&s);
 	void set_state(animated_state	&ms);
-	void event(timer *t){};	// может потребоваться не сам таймер, а анимация объекта
+	void event(timer *t, void*){};	// может потребоваться не сам таймер, а анимация объекта
 };
 
 
@@ -296,12 +265,12 @@ public:
 //====================================================================
 class motion_object 
 	:public	animated_object
-	,public no_extern< handler<dynamic_point> >
-	,public static_extern< send_up<object_move, and_receive>, game >
-	,public static_extern< send_up<check_move, and_receive>, game >
-	,public static_extern< handler<check_pile>, game>
-	,public static_extern< handler<broken_cage>, game>
-	,public static_extern< send_down<cycle>, game >
+	,public handler<dynamic_point>
+	,public static_source< handler<object_move>, game >
+	,public static_source< handler<check_move>, game >
+	,public static_source< handler<check_pile>, game>
+	,public static_source< handler<broken_cage>, game>
+	,public static_source< dispatcher<cycle>, game >
 {
 protected:
 	dynamic_point	dynamic;	// динамика объекта
@@ -329,18 +298,17 @@ protected:
 	void center_x();	// центруется по y
 
 public:
-	void event(dynamic_point *p);
-	void event(object_move *p);
-	void event(check_move *p);
-	void event(check_pile *p);
-	void event(broken_cage *b);
+	void event(dynamic_point *p, void*);
+	void event(object_move *p, void*);
+	void event(check_move *p, void*);
+	void event(check_pile *p, void*);
+	void event(broken_cage *b, void*);
 
 	//---------------------------------------------------------------------
 	virtual	void clash(bool after_drop, box *box){};
 	virtual void force_sink(){};
 	virtual	void need_drop();	// падать
 };
-
 
 
 #endif

@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #include "map.h"
@@ -14,8 +12,8 @@ int		map::level_size=0,
 //==============================================================================
 //	карта отвечает за хранение клеток, генерацию, загрузку, сохранение и пр
 //==============================================================================
-map::map(const string &land, const array_size &s)
-	:array_xy<cage>	(s)
+map::map(const string &land, const size<> &s)
+	:array2d<cage>	(s)
 	,land_name		(land)
 {
 }
@@ -24,25 +22,25 @@ map::map(const string &land, const array_size &s)
 //========================================================================
 // вырезание куска карты
 map::map(const map &m, const rect<> &r)
-	:array_xy<cage>	(r)
+	:array2d<cage>	(r)
 	,land_name		(m.land_name)
 {
 	point<> src, dst;
 	for (src.y=r.y, dst.y=0; dst.y<r.height; src.y++, dst.y++)
 		for (src.x=r.x, dst.x=0; dst.x<r.width; src.x++, dst.x++)
-			modify(dst)=m.read_only(src);
+			modify(dst)=m.read(src);
 }
 
 
 //========================================================================
-map::map(xml &x, const array_size &sz)
-	:array_xy<cage>	(sz)
+map::map(xml &x, const size<> &sz)
+	:array2d<cage>	(sz)
 {
 	land_name=x("land");
 
 	const char 	*s=x("cages");
 	cage		*c=&modify(point<>(0, 0));
-	const cage	*end=c+size().area();
+	const cage	*end=c+count().area();
 	for (; c!=end; c++, s++)
 		if ('0'>'a')
 			*c=(*s>='0' ? cage((item_type)(*s-'0')) : cage((cage::types)(*s-'a')));
@@ -55,14 +53,14 @@ map::map(xml &x, const array_size &sz)
 //========================================================================
 void map::save(xml &x)
 {
-	x("width", true)=string(size().width, 10);
-	x("height", true)=string(size().height, 10);
+	x("width", true)=string(count().width, 10);
+	x("height", true)=string(count().height, 10);
 	x("land", true)=land_name;
 	
 	string	&s=x("cages");
-	s.allocate(size().area());
-	const cage	*c=&read_only(point<>(0, 0));
-	const cage	*end=c+size().area();
+	s.allocate(count().area());
+	const cage	*c=&read(point<>(0, 0));
+	const cage	*end=c+count().area();
 	for (; c!=end; c++)
 		s+=(*c==no_item ? 'a'+(cage::types)*c : '0'+(item_type)*c);
 }
@@ -75,9 +73,9 @@ void map::save(xml &x)
 void map::operator=(const map &m)
 {
 	point<>	i;
-	for (i.y=0; i.y<size().height; ++i.y)
-		for (i.x=0; i.x<size().width; ++i.x)
-			modify(i)=m.read_only(i);
+	for (i.y=0; i.y<count().height; ++i.y)
+		for (i.x=0; i.x<count().width; ++i.x)
+			modify(i)=m.read(i);
 }
 
 
@@ -89,7 +87,7 @@ map *map::generate(const string &land_name, int s, int difficult, int n_players)
 	level_players=n_players;
 
 	return generate(
-		land_name, array_size(math::random(20)+s, math::random(10)+s), 
+		land_name, size<>(math::random(20)+s, math::random(10)+s), 
 		difficult/2+20,		// density
 		70,		// space
 		15,		// ladders_size
@@ -150,14 +148,14 @@ map *map::next_level()
 
 //========================================================================
 // генерация карты по множеству параметров
-map *map::generate(const string &land_name, const array_size &s, int density, int space, int ladders_size, 
+map *map::generate(const string &land_name, const size<> &s, int density, int space, int ladders_size, 
 		int soft, int hard, int ice, int mud, int rope, 
 		int cashs, int monsters, int items, int bombs, int boxes)
 {
 	platform::get().srand();
 	map *m=new map(land_name, s);
 	int	blocks=100-space;
-	blocks*=m->size().area();
+	blocks*=m->count().area();
 	blocks/=100;
 	m->create_paths((blocks*density)/100, ladders_size, soft, hard, ice, mud, rope);
 
@@ -192,15 +190,15 @@ map *map::generate(const string &land_name, const array_size &s, int density, in
 
 		// убираем близкостоящих к игрокам
 		point<>	pl;
-		for (pl.y=0; pl.y<m->size().height; ++pl.y)
-			for (pl.x=0; pl.x<m->size().width; ++pl.x)
-				if (m->read_only(pl)==iplayer)
+		for (pl.y=0; pl.y<m->count().height; ++pl.y)
+			for (pl.x=0; pl.x<m->count().width; ++pl.x)
+				if (m->read(pl)==iplayer)
 				{	
 					point<>	mn;
-					for (mn.y=0; mn.y<m->size().height; ++mn.y)
-						for (mn.x=0; mn.x<m->size().width; ++mn.x)
-							if (m->read_only(mn)==imonster)
-								if (abs(pl.x-mn.x)<10 && m->size().width>10)
+					for (mn.y=0; mn.y<m->count().height; ++mn.y)
+						for (mn.x=0; mn.x<m->count().width; ++mn.x)
+							if (m->read(mn)==imonster)
+								if (abs(pl.x-mn.x)<10 && m->count().width>10)
 								{
 									m->modify(mn)=cage::empty;
 									monsters++;
@@ -209,16 +207,16 @@ map *map::generate(const string &land_name, const array_size &s, int density, in
 	}
 
 	// ящики
-	m->create_items(ibox,		(boxes*(100-space)*m->size().area())/60000, true, false, true);
+	m->create_items(ibox,		(boxes*(100-space)*m->count().area())/60000, true, false, true);
 
 	// убираем ящики из нижней строки
-	for (point<> p(0, m->size().height-2); p.x<m->size().width; ++p.x)
-		if (m->read_only(p)==ibox)
+	for (point<> p(0, m->count().height-2); p.x<m->count().width; ++p.x)
+		if (m->read(p)==ibox)
 			m->modify(p)=cage::empty;
 
 	m->create_items(ibomb,		bombs, true);
 
-	int	ch=(cashs*space*m->size().area())/50000;
+	int	ch=(cashs*space*m->count().area())/50000;
 	m->create_items(lo_cash,	(ch*16)/21, false, true);
 	m->create_items(med_cash,	(ch*4)/21, false, true);
 	m->create_items(hi_cash,	ch/21, false, true);
@@ -234,15 +232,15 @@ void map::create_paths(int counter, int ladders_size, int soft, int hard, int ic
 	point<>	p;
 
 	// сначала рисуем базовую линию внизу карты
-	for (p=point<>(0, map.size().height-1); p.x<map.size().width; ++p.x)
+	for (p=point<>(0, map.count().height-1); p.x<map.count().width; ++p.x)
 		map[p]=cage::soft;
 
 	while (counter>0)
 	{
 		do
 		{
-			p=point<>(	math::random(map.size().width-1), 
-						math::random(map.size().height-1));
+			p=point<>(	math::random(map.count().width-1), 
+						math::random(map.count().height-1));
 		}
 		while (map[p]==cage::empty || map[p]==cage::ladder);
 		
@@ -262,14 +260,14 @@ void map::create_paths(int counter, int ladders_size, int soft, int hard, int ic
 				cen, end;
 		
 		do
-			cen=map.size().force_inside(beg.y_offset(math::random(ladders_size, -ladders_size)));
+			cen=map.count().force_inside(beg.y_offset(math::random(ladders_size, -ladders_size)));
 		while (abs(cen.y-beg.y)<2);
 
 		if (cen.y==0)
 			++cen.y;	// неверх все-равно забраться нельзя
 
 		do
-			end=map.size().force_inside(cen.x_offset(math::random(ladders_size, -ladders_size)));
+			end=map.count().force_inside(cen.x_offset(math::random(ladders_size, -ladders_size)));
 		while (abs(cen.x-end.x)<2);
 
 		point<>	dy=point<>(0, beg.y>cen.y ? -1 : 1),
@@ -282,7 +280,7 @@ void map::create_paths(int counter, int ladders_size, int soft, int hard, int ic
 		{
 			if (map[p+dy])
 				pass=false;
-			if (p.x<map.size().width-1)
+			if (p.x<map.count().width-1)
 				if (map[p.x_offset(1)])
 					pass=false;
 			if (p.x>1)
@@ -301,7 +299,7 @@ void map::create_paths(int counter, int ladders_size, int soft, int hard, int ic
 			{
 				if (map[p+dx])
 					pass=false;
-				if (p.y<map.size().height-1)
+				if (p.y<map.count().height-1)
 					if (map[p.y_offset(1)])
 						pass=false;
 				if (p.y>1)
@@ -356,8 +354,8 @@ bool map::solid_paths(int counter)
 	int	no_create=1000;	// через 1000 повторов вываливаться из цикла
 	while (counter>0 && --no_create>0)
 	{
-		point<>	p(	math::random(map.size().width-1), 
-					math::random(map.size().height-3, 1));
+		point<>	p(	math::random(map.count().width-1), 
+					math::random(map.count().height-3, 1));
 
 		if ((map[p]==cage::empty || map[p]==cage::decor_far || map[p]==cage::decor_near)
 			&& (map[p.y_offset(1)]==cage::empty || map[p.y_offset(1)]==cage::decor_far || map[p.y_offset(1)]==cage::decor_near))
@@ -389,15 +387,15 @@ bool map::create_items(item_type item, int count, bool to_bottom, bool vertical,
 	int	no_create=10000;	// через 10000 повторов вываливаться из цикла
 	while (count>0 && --no_create>0)
 	{
-		point<>	p(	math::random(map.size().width-1), 
-					math::random(map.size().height-1));
+		point<>	p(	math::random(map.count().width-1), 
+					math::random(map.count().height-1));
 		point<> i;
 
 		if (map[p]==cage::empty)
 		{
 			// проверка на отсутствие под предметом воды
 			bool	water=false;
-			for (i=p; ++i.y<map.size().height;)
+			for (i=p; ++i.y<map.count().height;)
 				if (map[i]==cage::water)
 				{
 					water=true;
@@ -416,7 +414,7 @@ bool map::create_items(item_type item, int count, bool to_bottom, bool vertical,
 			{
 				// проверка на возможность упасть сверху на предмет
 				bool	top_pass=false;
-				if (p.y>=map.size().height-1)
+				if (p.y>=map.count().height-1)
 					top_pass=true;
 				else
 					if (map[p.y_offset(1)].stop_drop())
@@ -443,7 +441,7 @@ bool map::create_items(item_type item, int count, bool to_bottom, bool vertical,
 								i.x+=2;
 							}
 
-							if (i.x<map.size().width-1)
+							if (i.x<map.count().width-1)
 								if (map[i]==cage::ladder || map[i]==cage::rope)
 								{
 									top_pass=true;
@@ -455,7 +453,7 @@ bool map::create_items(item_type item, int count, bool to_bottom, bool vertical,
 				if (top_pass)
 				{
 					if (vertical)
-						while (p.y<map.size().height && map[p]==cage::empty && count>0)	// в вертикальный ряд
+						while (p.y<map.count().height && map[p]==cage::empty && count>0)	// в вертикальный ряд
 						{
 							map[p]=c;
 							--count;
@@ -489,14 +487,14 @@ void map::create_columns()
 	*/
 	point<>	p, b;
 
-	for (p.y=1; p.y<map.size().height-1; ++p.y)
-		for (p.x=2; p.x<map.size().width-2; ++p.x)
+	for (p.y=1; p.y<map.count().height-1; ++p.y)
+		for (p.x=2; p.x<map.count().width-2; ++p.x)
 			// проверяем необходимость колонны
 			if (!map[p] && !map[p.x_offset(-1)] && !map[p.x_offset(-2)] && !map[p.x_offset(1)] && !map[p.x_offset(2)]
 				&& map[p.y_offset(-1)] && map[p.y_offset(-1)]!=cage::ladder && map[p.y_offset(-1)]!=cage::rope)
 				{
 					// проверяем нижний край
-					for (b=p; ++b.y<map.size().height;)
+					for (b=p; ++b.y<map.count().height;)
 						if (map[b]==cage::ladder || map[b]==cage::rope)
 							break;
 						else if (map[b])
@@ -520,40 +518,40 @@ void map::create_columns()
 rect<>	map::body()
 {
 	int	left=-1, 
-		right=size().width, 
+		right=count().width, 
 		top=-1,
 		i;
 	bool	stop;
 
 	// ищем левую границу
-	for (stop=false; !stop && ++left<size().width;)
-		for (i=size().height-1; --i>=0;)
-			if (read_only(point<>(left, i)))
+	for (stop=false; !stop && ++left<count().width;)
+		for (i=count().height-1; --i>=0;)
+			if (read(point<>(left, i)))
 			{
 				stop=true;
 				break;
 			}
 
 	for (stop=false; !stop && --right>=0;)
-		for (i=size().height-1; --i>=0;)
-			if (read_only(point<>(right, i)))
+		for (i=count().height-1; --i>=0;)
+			if (read(point<>(right, i)))
 			{
 				stop=true;
 				break;
 			}
 	
-	for (stop=false; !stop && ++top<size().height;)
-		for (i=size().width; --i>=0;)
-			if (read_only(point<>(i, top)))
+	for (stop=false; !stop && ++top<count().height;)
+		for (i=count().width; --i>=0;)
+			if (read(point<>(i, top)))
 			{
 				stop=true;
 				break;
 			}
 
 	if (left>=right)
-		return rect<>(0, 0, size().width, size().height);	// пустой лабиринт
+		return rect<>(0, 0, count().width, count().height);	// пустой лабиринт
 	
-	return rect<>(left, top-1, right-left+1, size().height-top+1);
+	return rect<>(left, top-1, right-left+1, count().height-top+1);
 }
 
 

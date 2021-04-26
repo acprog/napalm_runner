@@ -1,0 +1,21 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<game_over
+	title="Игра окончена"
+	border="form"
+	ground="tools"
+	width="100%"
+	height="100%">
+	<game_over
+		left="center-120"
+		top="center-120"
+		width="240"
+		height="240"/>
+	<info
+		text="Нажмите любую клавишу для продолжения"
+		left="+5%"
+		top="-15%"
+		width="90%"
+		bottom="-5%"/>
+</game_over>

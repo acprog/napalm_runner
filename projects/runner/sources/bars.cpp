@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #include "bars.h"
@@ -10,7 +8,7 @@
 #include "map.h"
 #include "editor.h"
 #include "resources.h"
-
+#include "events.h"
 
 
 
@@ -34,7 +32,7 @@ main_menu::main_menu()
 }
 		
 //========================================================================
-void main_menu::event(button *b)
+void main_menu::event(button *b, void*)
 {
 	if (b==&new_game)
 		new single;
@@ -49,7 +47,6 @@ void main_menu::event(button *b)
 	else if (b==&exit)
 		runner::get().close();
 }
-
 
 
 
@@ -94,7 +91,7 @@ top10::~top10()
 
 
 //========================================================================
-void top10::event(button *b)
+void top10::event(button *b, void*)
 {
 	if (b==&back)
 		new main_menu;
@@ -104,7 +101,7 @@ void top10::event(button *b)
 
 
 //========================================================================
-void top10::event(controls::keyboard *k)
+void top10::event(controls::keyboard *k, void*)
 {
 	runner::prefs("top10/prev_name")=*k;
 	push_string(*k);
@@ -137,7 +134,7 @@ try_again::try_again(player_info _pi)
 
 
 //========================================================================
-void try_again::event(timer *t)
+void try_again::event(timer *t, void*)
 {
 	if (t==&restart)
 		runner::get().restart_level(pi);
@@ -176,7 +173,7 @@ level_complete::level_complete(player_info _pi)
 
 
 //========================================================================
-void level_complete::event(key_down *k)
+void level_complete::event(key_down *k, void*)
 {
 	runner::get().next_level(pi);
 }
@@ -206,7 +203,7 @@ game_over::game_over(int _score)
 
 
 //========================================================================
-void game_over::event(key_down *k)
+void game_over::event(key_down *k, void*)
 {
 	new loop(theme::get(), "loops/menu");
 	if (maps::exist())
@@ -294,7 +291,7 @@ options::~options()
 
 
 //========================================================================
-void options::event(button *b)
+void options::event(button *b, void*)
 {
 	if (b==&exit)
 	{
@@ -346,7 +343,7 @@ void options::event(button *b)
 
 
 //========================================================================
-void options::event(controls::digital *d)
+void options::event(controls::digital *d, void*)
 {
 	if (d==&sound_volume)
 	{
@@ -397,7 +394,7 @@ random_map::random_map(const size<>	&_s, const string &_name, const string &_lan
 
 
 //========================================================================
-void random_map::event(button *b)
+void random_map::event(button *b, void*)
 {
 	if (b==&start)
 		new editor(
@@ -435,13 +432,13 @@ void random_map::event(button *b)
 		items.random();
 		bombs.random();
 		boxes.random();
-		event((controls::digital*)&soft);
+		event((controls::digital*)&soft, this);
 	}
 }
 
 
 //========================================================================
-void random_map::event(controls::digital *d)
+void random_map::event(controls::digital *d, void*)
 {
 	if (d==&soft
 	||	d==&hard
@@ -503,9 +500,9 @@ minimap::minimap(const size<> &mm_size, const map &_cages, const point<> &_linkv
 
 
 //====================================================================
-void minimap::event(redraw *screen)
+void minimap::event(redraw *screen, void *source)
 {
-	form::event(screen);
+	form::event(screen, source);
 	screen->ptr->put_transparent(img, point<>(x+5, y+5));
 
 	viewport.x=x+5+(linkview.x>0? 0: -linkview.x)*2/CAGE_SIZE;
@@ -514,7 +511,7 @@ void minimap::event(redraw *screen)
 	draw_on_minimap	d;
 	d.p=this;
 	d.screen=screen->ptr;
-	send(&d, this);
+	send(&d, this, this);
 
 	screen->ptr->draw_rect(viewport, window);
 }
@@ -556,11 +553,11 @@ void minimap::erase_point(const point<> &pos)
 void minimap::refresh()
 {
 	COLOR *bits=img.get_bits();
-	const cage	*c=&cages.read_only(point<>(0, 0));
+	const cage	*c=&cages.read(point<>(0, 0));
 	int		h, w;
-	for (h=cages.size().height; --h>=0; bits+=cages.size().width*2)
-		for (w=cages.size().width; --w>=0; bits+=2, c++)
-			*(bits+cages.size().width*2+1)=*(bits+cages.size().width*2)=*(bits+1)=*(bits)=get_minimap_color(*c);
+	for (h=cages.count().height; --h>=0; bits+=cages.count().width*2)
+		for (w=cages.count().width; --w>=0; bits+=2, c++)
+			*(bits+cages.count().width*2+1)=*(bits+cages.count().width*2)=*(bits+1)=*(bits)=get_minimap_color(*c);
 }
 
 
@@ -596,7 +593,7 @@ game_bar::game_bar()
 
 
 //====================================================================
-void game_bar::event(button *b)
+void game_bar::event(button *b, void*)
 {
 	if (b==&kill)
 		game::get().restart();
@@ -607,9 +604,9 @@ void game_bar::event(button *b)
 
 
 //====================================================================
-void game_bar::event(redraw *screen)
+void game_bar::event(redraw *screen, void *source)
 {
-	form::event(screen);
+	form::event(screen, source);
 
 	font	&fnt=*common::get().font;
 	int		py=y+(32-fnt.get_text_metric("a").height)/2;
@@ -629,7 +626,7 @@ void game_bar::set(const int *_lives, const int *_bombs, const int *_cash, const
 	n_lives=_lives;
 	n_bombs=_bombs;
 	n_cash=_cash;
-	new item(this, _item);
+	items.push(new item(this, _item));
 }
 
 
@@ -642,7 +639,7 @@ game_bar::item::item(form *parent, const item_type *_item)
 
 
 //====================================================================
-void game_bar::item::event(redraw *screen)
+void game_bar::item::event(redraw *screen, void*)
 {
 	if (*i!=no_item)
 		screen->ptr->put_transparent(theme::get().objects.get_frame(0, *i), *this);
@@ -678,7 +675,7 @@ game_menu::game_menu()
 
 
 //====================================================================
-void game_menu::event(button *b)
+void game_menu::event(button *b, void*)
 {
 	if (b==&exit)
 	{
@@ -704,7 +701,7 @@ void game_menu::event(button *b)
 
 
 //========================================================================
-void game_menu::event(controls::digital *d)
+void game_menu::event(controls::digital *d, void*)
 {
 	if (d==&sound_volume)
 	{
@@ -740,12 +737,12 @@ maps_manager::maps_manager()
 {
 	platform::get().find_files("maps", groups, true);
 	collection::get_names("maps", groups);
-	event(&groups);
+	event(&groups, this);
 }
 
 
 //========================================================================
-void maps_manager::event(button *b)
+void maps_manager::event(button *b, void*)
 {
 	if (b==&back)
 		new main_menu;
@@ -758,7 +755,7 @@ void maps_manager::event(button *b)
 				if (platform::get().remove_file("maps/"+groups.get_selected(), true)
 				||	platform::get().remove_file("maps/"+groups.get_selected()+".zip"))
 					groups.remove_selected();
-				event(&groups);
+				event(&groups, this);
 			}
 	}
 	else if (b==&create_group)
@@ -787,18 +784,18 @@ void maps_manager::event(button *b)
 
 
 //========================================================================
-void maps_manager::event(controls::keyboard *k)
+void maps_manager::event(controls::keyboard *k, void*)
 {
 	if (platform::get().mkdir("maps/"+*k))
 	{
 		groups.push_sortup(*k);
-		event(&groups);
+		event(&groups, this);
 	}
 }
 
 
 //========================================================================
-void maps_manager::event(controls::list *l)
+void maps_manager::event(controls::list *l, void*)
 {
 	if (l==&groups)
 	{
@@ -829,7 +826,7 @@ create_map::create_map()
 
 
 //========================================================================
-void create_map::event(button *b)
+void create_map::event(button *b, void*)
 {
 	if (b==&back)
 		new maps_manager;
@@ -869,7 +866,7 @@ single::single()
 
 
 //========================================================================
-void single::event(button *b)
+void single::event(button *b, void*)
 {
 	if (b==&start)
 	{
@@ -923,12 +920,12 @@ adventure::adventure()
 	,lmaps		(this, "maps")
 {
 	collection::get_names("maps", groups);
-	event(&groups);
+	event(&groups, this);
 }
 
 
 //========================================================================
-void adventure::event(button *b)
+void adventure::event(button *b, void*)
 {
 	if (b==&back)
 		new single;
@@ -938,7 +935,7 @@ void adventure::event(button *b)
 		maps::prefs("save/cashs")="0";
 		maps::prefs("save/lives")="3";
 		maps::prefs("save/level")="1";
-		event(&open);
+		event(&open, this);
 	}
 	else if (b==&open)
 	{
@@ -972,7 +969,7 @@ void adventure::event(button *b)
 
 
 //========================================================================
-void adventure::event(controls::list *l)
+void adventure::event(controls::list *l, void*)
 {
 	if (l==&groups)
 	{
@@ -1022,7 +1019,7 @@ edit_bar::edit_bar()
 
 
 //====================================================================
-void edit_bar::event(button *b)
+void edit_bar::event(button *b, void*)
 {
 	if (b==&exit)
 		editor::get().close();
@@ -1084,7 +1081,7 @@ objects_bar::objects_bar()
 
 
 //====================================================================
-void objects_bar::event(button *b)
+void objects_bar::event(button *b, void*)
 {
 	item_type	i;
 	if (b==&key)
@@ -1140,7 +1137,7 @@ terrain_bar::terrain_bar()
 
 
 //====================================================================
-void terrain_bar::event(button *b)
+void terrain_bar::event(button *b, void*)
 {
 	cage	c;
 
@@ -1177,7 +1174,7 @@ terrain_bar::terrain::terrain(form *ext, const string &name, const	animation	&_a
 
 
 //====================================================================
-void terrain_bar::terrain::event(redraw *screen)
+void terrain_bar::terrain::event(redraw *screen, void*)
 {
 	image	img(anims, rect<>(CAGE_SIZE*2, 0, CAGE_SIZE, CAGE_SIZE));
 	screen->ptr->put_transparent(img, *this);

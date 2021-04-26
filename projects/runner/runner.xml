@@ -1,0 +1,117 @@
+<?xml version="1.0" ?>
+<XML_DIZ_INFO>
+	<MASTER_PAD_VERSION_INFO>
+		<MASTER_PAD_VERSION>2.01</MASTER_PAD_VERSION>
+		<MASTER_PAD_EDITOR>PADGen 2.0.1.22 http://www.padgen.org</MASTER_PAD_EDITOR>
+		<MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. To find out more go to http://www.asp-shareware.org/pad</MASTER_PAD_INFO>
+	</MASTER_PAD_VERSION_INFO>
+	<Company_Info>
+		<Company_Name>Napalm Games</Company_Name>
+		<Address_1 />
+		<Address_2 />
+		<City_Town>Moscow</City_Town>
+		<State_Province />
+		<Zip_Postal_Code />
+		<Country>Russia</Country>
+		<Company_WebSite_URL>http://www.napalm-games.com</Company_WebSite_URL>
+		<Contact_Info>
+			<Author_First_Name>Alexander</Author_First_Name>
+			<Author_Last_Name>Semenov</Author_Last_Name>
+			<Author_Email>ac@napalm-games.com</Author_Email>
+			<Contact_First_Name>Denis</Contact_First_Name>
+			<Contact_Last_Name>Sobolevsky</Contact_Last_Name>
+			<Contact_Email>register@napalm-games.com</Contact_Email>
+		</Contact_Info>
+		<Support_Info>
+			<Sales_Email>register@napalm-games.com</Sales_Email>
+			<Support_Email>register@napalm-games.com</Support_Email>
+			<General_Email>register@napalm-games.com</General_Email>
+			<Sales_Phone />
+			<Support_Phone />
+			<General_Phone />
+			<Fax_Phone />
+		</Support_Info>
+	</Company_Info>
+	<Program_Info>
+		<Program_Name>naPalm Runner</Program_Name>
+		<Program_Version>1.5.1</Program_Version>
+		<Program_Release_Month>04</Program_Release_Month>
+		<Program_Release_Day>30</Program_Release_Day>
+		<Program_Release_Year>2005</Program_Release_Year>
+		<Program_Cost_Dollars>15</Program_Cost_Dollars>
+		<Program_Cost_Other_Code />
+		<Program_Cost_Other />
+		<Program_Type>Adware</Program_Type>
+		<Program_Release_Status>New Release</Program_Release_Status>
+		<Program_Install_Support>No Install Support</Program_Install_Support>
+		<Program_OS_Support>Win95,Win98,WinME,Windows2000,WinXP,Windows2003,Palm OS 5.0</Program_OS_Support>
+		<Program_Language>English,Russian</Program_Language>
+		<Program_Change_Info />
+		<Program_Specific_Category>Games</Program_Specific_Category>
+		<Program_Category_Class>Games &amp; Entertainment::Arcade</Program_Category_Class>
+		<Program_Categories>PDA Palm</Program_Categories>
+		<Program_System_Requirements>5Mbytes free</Program_System_Requirements>
+		<Includes_JAVA_VM>N</Includes_JAVA_VM>
+		<Includes_VB_Runtime>N</Includes_VB_Runtime>
+		<Includes_DirectX>N</Includes_DirectX>
+		<File_Info>
+			<Filename_Versioned>runner.zip</Filename_Versioned>
+			<Filename_Previous>runner.zip</Filename_Previous>
+			<Filename_Generic>runner.zip</Filename_Generic>
+			<Filename_Long>runner.zip</Filename_Long>
+			<File_Size_Bytes>3800000</File_Size_Bytes>
+			<File_Size_K>3710</File_Size_K>
+			<File_Size_MB>3.62</File_Size_MB>
+		</File_Info>
+		<Expire_Info>
+			<Has_Expire_Info>N</Has_Expire_Info>
+			<Expire_Count />
+			<Expire_Based_On>Days</Expire_Based_On>
+			<Expire_Other_Info />
+			<Expire_Month />
+			<Expire_Day />
+			<Expire_Year />
+		</Expire_Info>
+	</Program_Info>
+	<Program_Descriptions>
+		<English>
+			<Keywords>lode runner bomber man socoban quality 2d arcade free</Keywords>
+			<Char_Desc_45>Mix of ideas LodeRunner, BomberMan, Socoban</Char_Desc_45>
+			<Char_Desc_80>Mix of ideas LodeRunner, BomberMan, Socoban, but it has quality graphics, sound</Char_Desc_80>
+			<Char_Desc_250>Mix of ideas of popular games Lode Runner, Bomber Man and Socoban , but it has quality graphics and sound; limitless quantity of mazes of various size and complexity</Char_Desc_250>
+			<Char_Desc_450>naPalm Runner is mix of ideas of popular games (some of Lode Runner, some of Bomber Man, some of Sokoban), but it has quality graphics and animation, music and sound; limitless quantity of mazes of various size and complexity.</Char_Desc_450>
+			<Char_Desc_2000>naPalm Runner is mix of ideas of popular games (some of Lode Runner, some of Bomber Man, some of Sokoban), but it has quality graphics and animation, music and sound; limitless quantity of mazes of various size and complexity. 
+
+To proceed to next level You need to pickup ALL artefacts and open the door. There is monsters on the level, their purpose is to steal jewels and to hunt a player. Also, there are a barricades, consists of a boxes, barrels and ice cubes. You also can find an usefull items: bombs (to explode barriers and monsters), pick (to make impassable piles), freeze tool (makes freeze to monsters for a short time) and a trap (don't get in it). You can dig a pits to catch monsters or to undermine land under boxes, barrels and ice cubes.
+
+The Game supports a screens of a various sizes and orientation (turnes clockwise or counter clockwise), player's movement controls by pen and buttons, bulit-in Map Editor and possibility of addition of a new resoures.</Char_Desc_2000>
+		</English>
+	</Program_Descriptions>
+	<Web_Info>
+		<Application_URLs>
+			<Application_Info_URL>http://www.napalm-games.com/english/runner/index.html</Application_Info_URL>
+			<Application_Order_URL>http://www.palmgear.com/index.cfm?fuseaction=sc.buy&amp;PartnerREF=&amp;siteid=1&amp;prodID=101268</Application_Order_URL>
+			<Application_Screenshot_URL>http://www.napalm-games.com/english/runner/anim_160_big.gif</Application_Screenshot_URL>
+			<Application_Icon_URL />
+			<Application_XML_File_URL>http://www.napalm-games.com/runner.xml</Application_XML_File_URL>
+		</Application_URLs>
+		<Download_URLs>
+			<Primary_Download_URL>http://www.palmgear.com/index.cfm?fuseaction=software.redirector2&amp;file=runner.zip&amp;type=zip&amp;prodid=101268&amp;prodname=naPalm%20Runner&amp;PartnerREF=&amp;siteid=1&amp;siteid=1#</Primary_Download_URL>
+			<Secondary_Download_URL>http://www.napalm-games.com/download/runner.zip</Secondary_Download_URL>
+			<Additional_Download_URL_1 />
+			<Additional_Download_URL_2 />
+		</Download_URLs>
+	</Web_Info>
+	<Permissions>
+		<Distribution_Permissions />
+		<EULA>Copyrights
+All copyrights and property rights of computer game "naPalm Runner" (later "programm"), subsidiary files and any copies of the programm are belongs to it's author Alexander Semenov (later "author"). All rights of the programm is protected by laws and international agreements of the copyrights, other lows and contracts regulating relationships of copyright. It is forbidden to disassembly, decompile or make changes of the programm. 
+
+--
+
+Conditions of distribution
+Program is distribute in a principle of "as is". There is no any guaranties, obvious or constructive. You are using the program for your own risk. Author is decline all responsibility for missing of your data, damaging, straight loss combined with using (correct or incorrect) of this progam.
+
+Programm is distribute as shareware-product, i.e. You can to deliver copies of a programm to anybody, make CD- and floppy- copies, to deliver via internet, BBS or any other ways on the assumption of not modification of programm sources files. Installing and using of a programm are evidence of Your agreement with conditions of this licence. If you are not agree with conditions of this licence, you must to delete the programm and refuse usage of it.</EULA>
+	</Permissions>
+</XML_DIZ_INFO>

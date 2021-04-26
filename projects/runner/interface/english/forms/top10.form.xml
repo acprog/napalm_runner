@@ -1,0 +1,25 @@
+<?xml
+	version="1.0"
+	encoding="windows-1250"?>
+<top10
+	title="Top 10"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+
+	<back
+		picture="exit"
+		left="+30"
+		top="+75%"/>
+	<start
+		picture="game"
+		left="-94"
+		top="+75%"/>
+
+	<scores
+       	left="+15%"
+       	top="+15%"
+       	right="-15%"
+       	bottom="+80%"/>
+</top10>

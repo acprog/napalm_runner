@@ -1,0 +1,64 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<keys_binding
+	use_template_command="template"
+	title="Клавиши управления"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+
+	<exit
+		picture="exit"
+		left="+1"
+		top="-75"/>
+
+	<all_binds
+		left="+50%"
+		width="43%"
+		height="32">
+		<info
+			align="right"
+			left="+5%"
+			width="45%"
+			height="32"/>
+	</all_binds>
+
+	<put_bomb	top="+9%"	template="all_binds">
+		<info	top="+9%"	text="Поставить бомбу"/>
+	</put_bomb>
+
+	<item		top="+19%"	template="all_binds">
+		<info	top="+19%"	text="Использовать/взять"/>
+	</item>
+
+	<dig_right	top="+29%"	template="all_binds">
+		<info	top="+29%"	text="Копать справа"/>
+	</dig_right>
+
+	<dig_left	top="+39%"	template="all_binds">
+		<info	top="+39%"	text="Копать слева"/>
+	</dig_left>
+
+	<up			top="+49%"	template="all_binds">
+		<info	top="+49%"	text="Вверх по лестнице"/>
+	</up>
+
+	<down		top="+59%"	template="all_binds">
+		<info	top="+59%"	text="Вниз по лестнице"/>
+	</down>
+
+	<right		top="+69%"	template="all_binds">
+		<info	top="+69%"	text="Идти направо"/>
+	</right>
+
+	<left		top="+79%"	template="all_binds">
+		<info	top="+79%"	text="Идти налево"/>
+	</left>
+               
+	<pause		top="+89%"	template="all_binds">
+		<info	top="+89%"	text="Пауза"/>
+	</pause>
+
+</keys_binding>

@@ -1,0 +1,82 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<adventure
+	use_template_command="template"
+	title="Готовые наборы"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+	
+	<level
+		align="right"
+		left="+55%"
+		top="+20%"
+		width="40%"
+		height="9%">
+		<info
+			text="Уровень"
+			align="left"
+			left="+55%"
+			top="+15%"
+			width="40%"
+			height="9%"/>
+	</level>
+
+	<lives		top="+40%"	template="level">
+		<info	top="+35%"	text="Число попыток"/>
+	</lives>
+
+	<bombs		top="+55%"	template="level">
+		<info	top="+50%"	text="Количество бомб"/>
+	</bombs>
+
+	<cashs		top="+70%"	template="level">
+   		<info	top="+65%"	text="Очки"/>
+	</cashs>
+
+	<back
+		picture="exit"
+		left="+20"
+		top="-64"/>
+	<open
+		picture="game"
+		left="-84"
+		top="-64"/>
+
+	<restart
+		text="Сначала"
+   		left="+90"
+		right="-90"
+		height="35"
+		top="-48"/>
+
+	<groups
+		left="+5%"
+		top="+48"
+		right="center-32"
+		bottom="-64">
+		<up
+			picture="up"
+			left="center-32"
+			top="+48"/>
+		<down
+			template="groups/up"
+			picture="down"
+			top="-96"/>
+		<info
+			text="Наборы"
+			align="right"
+			left="+5%"
+			top="+26"
+			width="40%"
+			height="29"/>
+	</groups>
+
+	<maps		left="+50%"		right="-32"		template="groups">
+		<up		left="-32"/>
+		<down	left="-32"/>
+		<info	left="+50%"		text="Карты"/>
+	</maps>
+</adventure>

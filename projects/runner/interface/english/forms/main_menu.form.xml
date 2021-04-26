@@ -1,0 +1,41 @@
+<?xml
+	version="1.0"
+	encoding="windows-1250"?>
+<main_menu
+	use_template_command="template"
+	title="naPalm Runner"
+	border="form"
+	ground="ground"
+	width="100%"
+	height="100%">
+
+	<logo
+		left="center-64"
+		top="center-64"
+		picture="logo"/>
+
+	<single
+		left="+20%"
+		width="40%"
+		height="20%"
+		picture="game"
+		top="+10%"/>
+
+	<editor			template="single"			picture="editor"		top="+40%"		left="+5%"		width="25%"/>
+	<exit			template="single"			picture="exit"			top="+70%"/>
+
+	<options		template="single"			picture="options"		top="+10%"		left="+60%"/>
+	<hi_scores		template="options"			picture="top10"			top="+40%"		left="+75%"		width="25%"/>
+	<registration	template="options"			picture="register"		top="+70%"/>
+
+	<napalm_games
+		align="left"
+		left="+20"
+		top="-10%"
+		right="-20"
+		height="10%"/>	
+
+	<version
+		template="napalm_games"
+		align="right"/>	
+</main_menu>

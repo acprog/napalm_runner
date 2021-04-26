@@ -1,0 +1,62 @@
+<?xml
+	version="1.0"
+	encoding="windows-1251"?>
+<game_menu
+	use_template_command="template"
+	left="center-120"
+	top="center-120"
+	width="240"
+	height="208">
+
+	<movement_region
+		right="+100%"
+		bottom="-32"/>
+
+	<all_buttons
+	    left="+5%"
+		width="90%"
+		height="32"/>
+
+	<exit		template="all_buttons"	text="Прервать игру"		top="+0"/>
+	<restart	template="all_buttons"	text="Начать заново"		top="+35"/>
+	<controls	template="all_buttons"	text="Кнопки управления"	top="+140"/>
+	<resume		template="all_buttons"	text="Вернуться к игре" 	top="+175"/>
+
+	<no_music
+		text="Музыка выключена"
+		left="+5%"
+		top="+70"
+		right="-5%"
+		height="32">
+	</no_music>
+
+	<music
+		left="+55%"
+		top="+70"
+		right="+85%"
+		height="32">
+		<plus
+			picture="plus"
+			left="+85%"
+			top="+70"/>
+		<minus
+			picture="minus"
+			left="+40%"
+			top="+70"/>
+		<info
+			text="Музыка"
+			align="right"
+			left="+5%"
+			top="+70"
+			right="+35%"
+			height="32"/>
+	</music>
+
+	<sound
+		template="music"
+		top="+105">
+		<plus	top="+105"/>
+		<minus	top="+105"/>
+		<info	top="+105"		text="Звуки"/>
+	</sound>
+</game_menu>

@@ -1,0 +1,13 @@
+<font
+	mask="mask"
+	gradient="gradient">
+	<chars>!"#$%&'()*+,-./0123456789:;<>=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ‗אבגדהוזחטיךכלםמןנסעףפץצקרשתûü‎‏ÿ</chars>
+	<split>"</split>
+</font>
+
+<!-- 
+	1. 'chars' repeats symbols from mask. symbols in 'mask' separated minimum 1 vertical black line
+	2. this file may not correspond to XML standart (with all consequences) - in 'split' and 'chars' any symbols can placed, but <> must be in the pairs
+	3. in 'split' symbols, wich separated to 2 parts in 'mask' (for example ")
+	4. in 'gradient': stringa - various font flood. Now 1 string - passive text, 2 - selected
+-->

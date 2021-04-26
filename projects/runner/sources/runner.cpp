@@ -1,7 +1,5 @@
 /* naPalm Runner
-
   Copyright (C) 2006
-
   Author: Alexander Semenov <acmain@gmail.com>
 */
 #include "runner.h"
@@ -14,14 +12,11 @@ application *application::create()
 	return new runner;
 }
 
-
-extern void ogg_test();
-
 //========================================================================
 //	Napalm Runner
 //========================================================================
 runner::runner()
-	:application("naPalm 3D Runner", 20, APP_VERSION)
+	:application("naPalm Runner", 20, APP_VERSION)
 	,buffer		(NULL)
 {
 	platform::get().srand();
@@ -70,7 +65,7 @@ void runner::copy_to_buffer(map *m)
 {
 	if (buffer)
 		delete buffer;
-	buffer=new map(*m, m->size());
+	buffer=new map(*m, m->count());
 }
 
 
