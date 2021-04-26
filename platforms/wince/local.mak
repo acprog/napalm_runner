@@ -32,7 +32,7 @@ compile: $(BINS)
 	$(RC) $(RES_INC) /fo "$@" $<
 
 # сборка всех полученных модулей
-link: $(wildcard *.o) $(wildcard common/*.o) $(wildcard common/zip/*.o) $(wildcard common/ogg/*.o) $(wildcard $(PROJECT_NAME)/*.o) wince.res
+link: $(wildcard *.o) $(wildcard engine/*.o) $(wildcard engine/zip/*.o) $(wildcard engine/ogg/*.o) $(wildcard $(PROJECT_NAME)/*.o) wince.res
 	@"$(TOOLS_DIR)/link" $(LDFLAGS) $^ /OUT:"$(PROJECT_DIR)/winmobile.exe"
 	
 clean:
