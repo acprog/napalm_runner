@@ -1,0 +1,30 @@
+<?xml
+	version="1.0"
+	encoding="windows-1250"?>
+<strings>
+	<error
+		key="Invalid key lenght. Key must be 'xxxx-xxxx' without spaces"
+		need_group="Must create or point group for a new map"
+		name="Invalid name"
+		player_place="Player start point not selected"
+		save_map="Can't save map"/>
+	<rotate
+		no="No"
+		left="Left"
+		right="Right"
+		up_to_down="Upside down"/>
+	<sound
+		low="Low"
+		hi="High"
+		/>
+	<question
+		erase_pack="Delete set of maps '"
+		erase_map="Delete map '"
+		undo_all="Undo last changes"/>
+	<input
+		new_group="Enter name of a new group"
+		top10="You're in top ten! Your name:"/>
+	<top10
+		player="Player"
+		your_result="Your Score"/>
+</strings>
