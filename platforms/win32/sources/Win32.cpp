@@ -1,3 +1,9 @@
+/* naPalm Runner
+
+  Copyright (C) 2006
+
+  Author: Alexander Semenov <acmain@gmail.com>
+*/
 // Win32.cpp : Defines the entry point for the application.
 //
 

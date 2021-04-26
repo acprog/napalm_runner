@@ -1,3 +1,9 @@
+/* naPalm Runner
+
+  Copyright (C) 2006
+
+  Author: Alexander Semenov <acmain@gmail.com>
+*/
 #include "palmos5.h"
 
 static const char *work_dir=NULL;
