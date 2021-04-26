@@ -2,8 +2,8 @@ PROJECT:=*
 PLATFORM:=*
 BUILD_TYPE:=rebuild
 TO_BACKUP:=	* \
-			common/*/* \
-			common/*/*/* \
+			engine/*/* \
+			engine/*/*/* \
 			projects/* \
 			projects/$(PROJECT)/sources/* \
 			projects/$(PROJECT)/interface/*/*.xml \
